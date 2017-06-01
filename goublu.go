@@ -1,3 +1,7 @@
+// Copyright *C* 2017 Jack J. Woehr
+// All rights reserved.
+// Use of this source code is governed by a BSD 3-clause license
+// that can be found in the LICENSE file.
 package main
 
 import (
@@ -9,7 +13,6 @@ import (
 )
 
 func main() {
-//	cmd := exec.Command("java", "-version")
 
 	myCmds := []string {"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
 	ubluArgs := append(myCmds, os.Args[1:]...)
@@ -28,6 +31,7 @@ func main() {
 			text, _ = outreader.ReadString('\n')
 			fmt.Print(text)
 		}
+		defer outreader.Close()
 	}()
 	
 	go func() {
@@ -36,6 +40,7 @@ func main() {
 			text, _ = errreader.ReadString('\n')
 			fmt.Print(text)
 		}
+		defer errreader.Close()
 	}()
 /*	
 	go func() {
@@ -53,6 +58,7 @@ func main() {
 		if err := scanner.Err(); err != nil {
 			fmt.Fprintln(os.Stderr, "reading standard input:", err)
 		}
+		defer scanner.Close()
 	}()
 
 	cmd.Run()
