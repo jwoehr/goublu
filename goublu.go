@@ -13,7 +13,7 @@ import (
 )
 
 func main() {
-
+	fmt.Println("GoUblu front end for Ublu")
 	myCmds := []string {"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
 	ubluArgs := append(myCmds, os.Args[1:]...)
 	cmd := exec.Command("java", ubluArgs...)
@@ -31,7 +31,7 @@ func main() {
 			text, _ = outreader.ReadString('\n')
 			fmt.Print(text)
 		}
-		defer outreader.Close()
+		defer stdout.Close()
 	}()
 	
 	go func() {
@@ -40,7 +40,7 @@ func main() {
 			text, _ = errreader.ReadString('\n')
 			fmt.Print(text)
 		}
-		defer errreader.Close()
+		defer stderr.Close()
 	}()
 /*	
 	go func() {
@@ -58,7 +58,6 @@ func main() {
 		if err := scanner.Err(); err != nil {
 			fmt.Fprintln(os.Stderr, "reading standard input:", err)
 		}
-		defer scanner.Close()
 	}()
 
 	cmd.Run()
