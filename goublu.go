@@ -1,3 +1,7 @@
+// GoUblu github.com/jwoehr/goublu
+// goublu launches ublu (https://github.com/jwoehr/ublu) a java-coded
+// domain-specific language for remote programming of traditional IBM business
+// systems. goublu means to supplement the weak console support of Java. 
 // Copyright *C* 2017 Jack J. Woehr
 // All rights reserved.
 // Use of this source code is governed by a BSD 3-clause license
