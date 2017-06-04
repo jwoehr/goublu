@@ -5,26 +5,26 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"io"
-	"bufio"
 	"os"
 	"os/exec"
 )
 
 func main() {
 	fmt.Println("GoUblu front end for Ublu")
-	myCmds := []string {"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
+	myCmds := []string{"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
 	ubluArgs := append(myCmds, os.Args[1:]...)
 	cmd := exec.Command("java", ubluArgs...)
-	stdin, _  := cmd.StdinPipe()
+	stdin, _ := cmd.StdinPipe()
 	stdout, _ := cmd.StdoutPipe()
 	stderr, _ := cmd.StderrPipe()
 	outreader := bufio.NewReader(stdout)
 	errreader := bufio.NewReader(stderr)
-/*	inreader  := bufio.NewReader(os.Stdin) */
-	scanner   := bufio.NewScanner(os.Stdin)
-	
+	/*	inreader  := bufio.NewReader(os.Stdin) */
+	scanner := bufio.NewScanner(os.Stdin)
+
 	go func() {
 		var text string
 		for {
@@ -33,7 +33,7 @@ func main() {
 		}
 		defer stdout.Close()
 	}()
-	
+
 	go func() {
 		var text string
 		for {
@@ -42,18 +42,18 @@ func main() {
 		}
 		defer stderr.Close()
 	}()
-/*	
-	go func() {
-		var text string
-		for {
-			text, _ = inreader.ReadString('\n')
-			io.WriteString(stdin, text)  	  
-		}
-	}()
-*/	
+	/*
+		go func() {
+			var text string
+			for {
+				text, _ = inreader.ReadString('\n')
+				io.WriteString(stdin, text)
+			}
+		}()
+	*/
 	go func() {
 		for scanner.Scan() {
-			io.WriteString(stdin, scanner.Text() + "\n")
+			io.WriteString(stdin, scanner.Text()+"\n")
 		}
 		if err := scanner.Err(); err != nil {
 			fmt.Fprintln(os.Stderr, "reading standard input:", err)
