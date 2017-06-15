@@ -1,122 +1,219 @@
 // GoUblu github.com/jwoehr/goublu
-// goublu launches ublu (https://github.com/jwoehr/ublu) a java-coded
-// domain-specific language for remote programming of traditional IBM business
-// systems. goublu means to supplement the weak console support of Java.
-
+// goublu launches and serves as a better-than-Java console for
+// https://github.com/jwoehr/ublu Ublu, a Java-coded domain-specific language
+// for remote programming of IBM midrange and mainframe systems.
 package main
 
 import (
 	"bufio"
 	"fmt"
+	"github.com/jroimartin/gocui"
 	"io"
+	"log"
 	"os"
 	"os/exec"
-	"github.com/nsf/termbox-go"
-	"github.com/jwoehr/goublu/console"
 )
 
+// Do layout in cogui loop.
+// Most of the work actually in go functions in main()
+func layout(g *gocui.Gui) error {
+	maxX, maxY := g.Size()
+	if v, err := g.SetView("ubluout", -1, -1, maxX, maxY-4); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+		v.SelFgColor = gocui.ColorGreen
+		v.SelBgColor = gocui.ColorBlack
+	}
+	if v, err := g.SetView("ubluin", -1, maxY-4, maxX, maxY); err != nil {
+		if err != gocui.ErrUnknownView {
+			return err
+		}
+		v.Editable = true
+		v.Editor = DefaultEditor
+		v.Wrap = true
+		if _, err := g.SetCurrentView("ubluin"); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+/*
+// Output to ublu's output view
+func ubluout(g *gocui.Gui, text string) {
+	// g.Execute(func(g *gocui.Gui) error {
+		v, err := g.View("ubluout")
+		if err != nil {
+			// handle error
+		}
+		fmt.Fprint(v, text)
+	//	return nil
+	// })
+}
+*/
+
+// Exit via the gui instead of via Ublu
+func quit(g *gocui.Gui, v *gocui.View) error {
+	return gocui.ErrQuit
+}
+
+// DefaultEditor is the default editor.
+var DefaultEditor gocui.Editor = gocui.EditorFunc(simpleEditor)
+
+// simpleEditor is used as the default gocui editor.
+func simpleEditor(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+	switch {
+	case ch != 0 && mod == 0:
+		v.EditWrite(ch)
+	case key == gocui.KeySpace:
+		v.EditWrite(' ')
+	case key == gocui.KeyBackspace || key == gocui.KeyBackspace2:
+		v.EditDelete(true)
+	case key == gocui.KeyDelete:
+		v.EditDelete(false)
+	case key == gocui.KeyInsert:
+		v.Overwrite = !v.Overwrite
+		/*
+			case key == KeyEnter:
+				v.EditNewLine()
+		*/
+	case key == gocui.KeyArrowDown:
+		v.MoveCursor(0, 1, false)
+	case key == gocui.KeyArrowUp:
+		v.MoveCursor(0, -1, false)
+	case key == gocui.KeyArrowLeft:
+		v.MoveCursor(-1, 0, false)
+	case key == gocui.KeyArrowRight:
+		v.MoveCursor(1, 0, false)
+	}
+}
+
 func main() {
-	
-	var edit_box console.EditBox
-	
-	fmt.Println("GoUblu front end for Ublu")
+
+	// Prepare command
 	myCmds := []string{"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
 	ubluArgs := append(myCmds, os.Args[1:]...)
 	cmd := exec.Command("java", ubluArgs...)
+
+	// Pipes
 	stdin, _ := cmd.StdinPipe()
 	stdout, _ := cmd.StdoutPipe()
 	stderr, _ := cmd.StderrPipe()
+
+	defer stdout.Close()
+	defer stderr.Close()
+
+	// Readers
 	outreader := bufio.NewReader(stdout)
 	errreader := bufio.NewReader(stderr)
-	/*	inreader  := bufio.NewReader(os.Stdin) */
-	/* scanner := bufio.NewScanner(os.Stdin) */
 
+	// cogui
+	g, err := gocui.NewGui(gocui.OutputNormal)
+	if err != nil {
+		log.Panicln(err)
+	}
+
+	// Deliver Ublu's stdout
 	go func() {
-		var text string
 		for {
-			text, _ = outreader.ReadString('\n')
-			fmt.Print(text)
+
+			text, _ := outreader.ReadString('\n')
+			v, err := g.View("ubluout")
+			if err != nil {
+				// handle error
+			}
+			fmt.Fprint(v, text)
 		}
-		defer stdout.Close()
 	}()
 
+	// Deliver Ublu's stderr
 	go func() {
-		var text string
 		for {
-			text, _ = errreader.ReadString('\n')
-			fmt.Print(text)
+
+			text, _ := errreader.ReadString('\n')
+			v, err := g.View("ubluout")
+			if err != nil {
+				// handle error
+			}
+			fmt.Fprint(v, text)
+
 		}
-		defer stderr.Close()
 	}()
+
+	// DefaultEditor is the default editor.
+	DefaultEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+		switch {
+		case ch != 0 && mod == 0:
+			v.EditWrite(ch)
+		case key == gocui.KeySpace:
+			v.EditWrite(' ')
+		case key == gocui.KeyBackspace || key == gocui.KeyBackspace2:
+			v.EditDelete(true)
+		case key == gocui.KeyDelete:
+			v.EditDelete(false)
+		case key == gocui.KeyInsert:
+			v.Overwrite = !v.Overwrite
+		case key == gocui.KeyEnter:
+			// v.EditNewLine()
+			var l string
+			var err error
+			cx, cy := v.Cursor()
+			if l, err = v.Line(cy); err != nil {
+				l = ""
+			}
+			w, _ := g.View("ubluout")
+			fmt.Fprint(w, l)
+			io.WriteString(stdin, l+"\n")
+			v.Clear()
+		case key == gocui.KeyArrowDown:
+			v.MoveCursor(0, 1, false)
+		case key == gocui.KeyArrowUp:
+			v.MoveCursor(0, -1, false)
+		case key == gocui.KeyArrowLeft:
+			v.MoveCursor(-1, 0, false)
+		case key == gocui.KeyArrowRight:
+			v.MoveCursor(1, 0, false)
+		}
+	})
 	/*
-		go func() {
-			var text string
-			for {
-				text, _ = inreader.ReadString('\n')
-				io.WriteString(stdin, text)
-			}
-		}()
-	*/
-	/*
-		go func() {
-			for scanner.Scan() {
-				io.WriteString(stdin, scanner.Text()+"\n")
-			}
-			if err := scanner.Err(); err != nil {
-				fmt.Fprintln(os.Stderr, "reading standard input:", err)
-			}
-		}()
-	*/
-	go func() {
-		err := termbox.Init()
-		if err != nil {
-			panic(err)
-		}
-		defer termbox.Close()
-		termbox.SetInputMode(termbox.InputEsc)
+		if err := g.SetKeybinding("ubluin", gocui.KeyEnter, gocui.ModNone, func(g *gocui.Gui, v *gocui.View) error {
+			var l string
+			var err error
 
-		console.Redraw_all()
-	mainloop:
-		for {
-			switch ev := termbox.PollEvent(); ev.Type {
-			case termbox.EventKey:
-				switch ev.Key {
-				case termbox.KeyEsc:
-					break mainloop
-				case termbox.KeyArrowLeft, termbox.KeyCtrlB:
-					edit_box.MoveCursorOneRuneBackward()
-				case termbox.KeyArrowRight, termbox.KeyCtrlF:
-					edit_box.MoveCursorOneRuneForward()
-				case termbox.KeyBackspace, termbox.KeyBackspace2:
-					edit_box.DeleteRuneBackward()
-				case termbox.KeyDelete, termbox.KeyCtrlD:
-					edit_box.DeleteRuneForward()
-				case termbox.KeyTab:
-					edit_box.InsertRune('\t')
-				case termbox.KeySpace:
-					edit_box.InsertRune(' ')
-				case termbox.KeyCtrlK:
-					edit_box.DeleteTheRestOfTheLine()
-				case termbox.KeyHome, termbox.KeyCtrlA:
-					edit_box.MoveCursorToBeginningOfTheLine()
-				case termbox.KeyEnd, termbox.KeyCtrlE:
-					edit_box.MoveCursorToEndOfTheLine()
-				case termbox.KeyEnter:
-					io.WriteString(stdin, string(edit_box.Text) + "\n")
-					edit_box.Empty()
-					edit_box.MoveCursorToBeginningOfTheLine()
-					// edit_box.Draw()
-				default:
-					if ev.Ch != 0 {
-						edit_box.InsertRune(ev.Ch)
-					}
-				}
-			case termbox.EventError:
-				panic(ev.Err)
+			_, cy := v.Cursor()
+			if l, err = v.Line(cy); err != nil {
+				l = ""
 			}
-			console.Redraw_all()
+
+			w, werr := g.View("ubluout")
+			if werr != nil {
+				// handle error
+			}
+			fmt.Fprint(w, l)
+
+			io.WriteString(stdin, l+"\n")
+
+			return nil
+		}); err != nil {
+			log.Panicln(err)
+		}
+	*/
+	defer g.Close()
+
+	g.Cursor = true
+	g.SetManagerFunc(layout)
+	// ubluout(g, "GoUblu front end for Ublu")
+
+	if err := g.SetKeybinding("", gocui.KeyCtrlC, gocui.ModAlt, quit); err != nil {
+		log.Panicln(err)
+	}
+
+	go func() {
+		if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
+			log.Panicln(err)
 		}
 	}()
-	
+
 	cmd.Run()
 }
