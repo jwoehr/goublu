@@ -35,7 +35,7 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		// v.Autoscroll = true
+		v.Autoscroll = true
 		v.Editable = true
 		v.Editor = DefaultEditor
 		v.Wrap = true
@@ -140,8 +140,14 @@ func main() {
 	}()
 
 	DefaultEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
-	    cx, cy := v.Cursor()
-	    text, _ := v.Line(cy)
+		gx, gy := g.Size()
+		cx, cy := v.Cursor()
+		text, _ := v.Line(cy)
+
+		// Shut up compiler
+		gx = gx
+		cy = cy
+
 		switch {
 		case ch != 0 && mod == 0:
 			v.EditWrite(ch)
@@ -164,9 +170,18 @@ func main() {
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
 		case key == gocui.KeyCtrlA:
-			v.MoveCursor(0-cx, cy-cy, false) 	
+			v.MoveCursor(0-cx, 0, false)
+		case key == gocui.KeyCtrlB:
+			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyCtrlE:
-			v.MoveCursor(len(text)-cx, cy-cy, false) 
+			v.MoveCursor(len(text)-cx, 0, false)
+		case key == gocui.KeyCtrlF:
+			v.MoveCursor(1, 0, false)
+		case key == gocui.KeyCtrlK:
+			// this isn't quite correct but sorta works
+			for i := cy; i < gy; i++ {
+				v.EditDelete(false)
+			}
 		}
 	})
 
