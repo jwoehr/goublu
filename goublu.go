@@ -35,6 +35,7 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+		// v.Autoscroll = true
 		v.Editable = true
 		v.Editor = DefaultEditor
 		v.Wrap = true
@@ -56,7 +57,6 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser) {
 	var l string
 	var err error
-	// cx, cy := v.Cursor()
 	cx, cy := v.Cursor()
 	_, gy := g.Size()
 	if l, err = v.Line(cy); err != nil {
@@ -64,7 +64,7 @@ func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser) {
 	}
 	w, _ := g.View("ubluout")
 	if l != "" {
-		fmt.Fprint(w, "> " + l+"\n")
+		fmt.Fprint(w, "> "+l+"\n")
 		io.WriteString(stdin, l+"\n")
 	}
 	v.Clear()
@@ -119,6 +119,8 @@ func main() {
 	g, err := gocui.NewGui(gocui.OutputNormal)
 	if err != nil {
 		log.Panicln(err)
+	} else {
+		g.Mouse = true
 	}
 
 	// Deliver Ublu's stdout
@@ -138,6 +140,8 @@ func main() {
 	}()
 
 	DefaultEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+	    cx, cy := v.Cursor()
+	    text, _ := v.Line(cy)
 		switch {
 		case ch != 0 && mod == 0:
 			v.EditWrite(ch)
@@ -159,6 +163,10 @@ func main() {
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
+		case key == gocui.KeyCtrlA:
+			v.MoveCursor(0-cx, cy-cy, false) 	
+		case key == gocui.KeyCtrlE:
+			v.MoveCursor(len(text)-cx, cy-cy, false) 
 		}
 	})
 
@@ -174,7 +182,7 @@ func main() {
 	}()
 
 	cmd.Run()
-	
+
 	g.Close()
 	fmt.Println("Ublu has exited.")
 	fmt.Println("Goodbye from Goublu!")
