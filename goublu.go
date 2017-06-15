@@ -25,8 +25,7 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.SelFgColor = gocui.ColorGreen
-		v.SelBgColor = gocui.ColorBlack
+		v.Autoscroll = true
 	}
 	if v, err := g.SetView("ubluin", -1, maxY-4, maxX, maxY); err != nil {
 		if err != gocui.ErrUnknownView {
