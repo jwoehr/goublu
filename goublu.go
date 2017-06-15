@@ -13,21 +13,22 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	// "unicode/utf8"
 )
 
 var DefaultEditor gocui.Editor
 
-// Do layout in cogui loop.
-// Most of the work actually in go functions in main()
+const inputLineOffset = 2
+
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
-	if v, err := g.SetView("ubluout", -1, -1, maxX, maxY-4); err != nil {
+	if v, err := g.SetView("ubluout", -1, -1, maxX, maxY-inputLineOffset); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 		v.Autoscroll = true
 	}
-	if v, err := g.SetView("ubluin", -1, maxY-4, maxX, maxY); err != nil {
+	if v, err := g.SetView("ubluin", -1, maxY-inputLineOffset, maxX, maxY); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -41,17 +42,34 @@ func layout(g *gocui.Gui) error {
 	return nil
 }
 
+/*
 // Exit via the gui instead of via Ublu
 func quit(g *gocui.Gui, v *gocui.View) error {
 	return gocui.ErrQuit
 }
+*/
 
 func ubluout(g *gocui.Gui, text string) {
 	v, err := g.View("ubluout")
 	if err != nil {
 		// handle error
 	}
-	fmt.Fprint(v, text)
+	count := len(text)
+	width, _ := g.Size()
+	// width = width - 1
+	for i := 0; i < count; i = i + width {
+		fmt.Fprint(v, text[i:min(count-1, i+width)])
+		if i < count-1 {
+			fmt.Fprint(v, "\n")
+		}
+	}
+}
+
+func min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
 }
 
 func main() {
@@ -113,14 +131,16 @@ func main() {
 			var l string
 			var err error
 			// cx, cy := v.Cursor()
-			_, cy := v.Cursor()
+			cx, cy := v.Cursor()
+			_, gy := g.Size()
 			if l, err = v.Line(cy); err != nil {
 				l = ""
 			}
 			w, _ := g.View("ubluout")
-			fmt.Fprint(w, l)
+			fmt.Fprint(w, l+"\n")
 			io.WriteString(stdin, l+"\n")
 			v.Clear()
+			v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
 		case key == gocui.KeyArrowDown:
 			v.MoveCursor(0, 1, false)
 		case key == gocui.KeyArrowUp:
