@@ -9,6 +9,8 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/jroimartin/gocui"
+	// "github.com/jwoehr/gocui"
+	"github.com/nsf/termbox-go"
 	"io"
 	"log"
 	"os"
@@ -18,8 +20,10 @@ import (
 
 var DefaultEditor gocui.Editor
 
+// How far from bottom we reserve our input area
 const inputLineOffset = 2
 
+// Obligatory layout redraw function
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	if v, err := g.SetView("ubluout", -1, -1, maxX, maxY-inputLineOffset); err != nil {
@@ -49,6 +53,26 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 }
 */
 
+// Pipe input to Ublu
+func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser) {
+	var l string
+	var err error
+	// cx, cy := v.Cursor()
+	cx, cy := v.Cursor()
+	_, gy := g.Size()
+	if l, err = v.Line(cy); err != nil {
+		l = ""
+	}
+	w, _ := g.View("ubluout")
+	if l != "" {
+		fmt.Fprint(w, "> " + l+"\n")
+		io.WriteString(stdin, l+"\n")
+	}
+	v.Clear()
+	v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
+}
+
+// Write to console output from Ublu
 func ubluout(g *gocui.Gui, text string) {
 	v, err := g.View("ubluout")
 	if err != nil {
@@ -56,13 +80,14 @@ func ubluout(g *gocui.Gui, text string) {
 	}
 	count := len(text)
 	width, _ := g.Size()
-	// width = width - 1
+	// This isn't right, we'll have to deal with rune width instead
 	for i := 0; i < count; i = i + width {
 		fmt.Fprint(v, text[i:min(count-1, i+width)])
 		if i < count-1 {
 			fmt.Fprint(v, "\n")
 		}
 	}
+	termbox.Interrupt()
 }
 
 func min(x, y int) int {
@@ -113,7 +138,6 @@ func main() {
 		}
 	}()
 
-	// DefaultEditor is the default editor.
 	DefaultEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		switch {
 		case ch != 0 && mod == 0:
@@ -127,20 +151,7 @@ func main() {
 		case key == gocui.KeyInsert:
 			v.Overwrite = !v.Overwrite
 		case key == gocui.KeyEnter:
-			// v.EditNewLine()
-			var l string
-			var err error
-			// cx, cy := v.Cursor()
-			cx, cy := v.Cursor()
-			_, gy := g.Size()
-			if l, err = v.Line(cy); err != nil {
-				l = ""
-			}
-			w, _ := g.View("ubluout")
-			fmt.Fprint(w, l+"\n")
-			io.WriteString(stdin, l+"\n")
-			v.Clear()
-			v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
+			ubluin(g, v, stdin)
 		case key == gocui.KeyArrowDown:
 			v.MoveCursor(0, 1, false)
 		case key == gocui.KeyArrowUp:
@@ -152,7 +163,7 @@ func main() {
 		}
 	})
 
-	defer g.Close()
+	// defer g.Close()
 
 	g.Cursor = true
 	g.SetManagerFunc(layout)
@@ -164,4 +175,8 @@ func main() {
 	}()
 
 	cmd.Run()
+	
+	g.Close()
+	fmt.Println("Ublu has exited.")
+	fmt.Println("Goodbye from Goublu!")
 }
