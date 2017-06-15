@@ -9,7 +9,6 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/jroimartin/gocui"
-	// "github.com/jwoehr/gocui"
 	"github.com/nsf/termbox-go"
 	"io"
 	"log"
