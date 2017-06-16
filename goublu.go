@@ -48,7 +48,9 @@ func forwardHistory() string {
 	} else {
 		if commandPointer == -1 {
 			commandPointer = 0
-			result = commandLineHistory[commandPointer]
+			if len(commandLineHistory) > 0 {
+				result = commandLineHistory[commandPointer]
+			}
 			commandPointer = min(commandPointer+1, len(commandLineHistory)-1)
 		} else {
 			commandPointer = len(commandLineHistory) - 1 // so we can't over-increment
