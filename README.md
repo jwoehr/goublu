@@ -1,11 +1,14 @@
 # goublu
-Goublu is a Go language front end that provides a better console interface to [Ublu](https://github.com/jwoehr/ublu) than
-the console support provided by Java.
+Goublu is a [Go language](http://golang.org) front end that provides a better console interface to [Ublu](https://github.com/jwoehr/ublu) than the console support provided by Java.
 
-Goublu is new and works rudimentarily. Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
+Goublu is new and works rudimentarily.
+
+Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
 
 ##Usage
-* Build:  `go -build goublu.go`
+
+* Fetch:  `go get github.com/jwoehr/goublu`
+* Build:  `go build goublu.go`
 * Invoke: `goublu ublu_arg ublu_arg ...`
 * Assumes Ublu is found in `/opt/ublu/ublu.jar`
 * Basic line editing
