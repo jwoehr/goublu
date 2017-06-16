@@ -14,10 +14,48 @@ import (
 	"log"
 	"os"
 	"os/exec"
+	"strings"
 	// "unicode/utf8"
 )
 
-var DefaultEditor gocui.Editor
+var commandLineEditor gocui.Editor
+
+var commandLineHistory = make([]string, 0, 20)
+
+var commandPointer = -1
+
+func appendHistory(l string) {
+	commandLineHistory = append(commandLineHistory, strings.TrimSpace(l))
+	commandPointer = len(commandLineHistory) - 1
+}
+
+func backHistory() string {
+	var result string
+	if commandPointer > -1 {
+		result = commandLineHistory[commandPointer]
+		commandPointer = max(commandPointer-1, -1)
+	} else {
+		commandPointer = -1 // so we can't over-decrement
+	}
+	return strings.TrimSpace(result)
+}
+
+func forwardHistory() string {
+	var result string
+	if -1 < commandPointer && commandPointer < len(commandLineHistory) {
+		result = commandLineHistory[commandPointer]
+		commandPointer = min(commandPointer+1, len(commandLineHistory)-1)
+	} else {
+		if commandPointer == -1 {
+			commandPointer = 0
+			result = commandLineHistory[commandPointer]
+			commandPointer = min(commandPointer+1, len(commandLineHistory)-1)
+		} else {
+			commandPointer = len(commandLineHistory) - 1 // so we can't over-increment
+		}
+	}
+	return strings.TrimSpace(result)
+}
 
 // How far from bottom we reserve our input area
 const inputLineOffset = 2
@@ -37,7 +75,7 @@ func layout(g *gocui.Gui) error {
 		}
 		v.Autoscroll = true
 		v.Editable = true
-		v.Editor = DefaultEditor
+		v.Editor = commandLineEditor
 		v.Wrap = true
 		if _, err := g.SetCurrentView("ubluin"); err != nil {
 			return err
@@ -62,11 +100,13 @@ func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser) {
 	if l, err = v.Line(cy); err != nil {
 		l = ""
 	}
+	l = strings.TrimSpace(l)
 	w, _ := g.View("ubluout")
 	if l != "" {
 		fmt.Fprint(w, "> "+l+"\n")
 		io.WriteString(stdin, l+"\n")
 	}
+	appendHistory(l)
 	v.Clear()
 	v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
 }
@@ -87,6 +127,13 @@ func ubluout(g *gocui.Gui, text string) {
 		}
 	}
 	termbox.Interrupt()
+}
+
+func max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
 }
 
 func min(x, y int) int {
@@ -139,7 +186,7 @@ func main() {
 		}
 	}()
 
-	DefaultEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+	commandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		gx, gy := g.Size()
 		cx, cy := v.Cursor()
 		text, _ := v.Line(cy)
@@ -162,9 +209,17 @@ func main() {
 		case key == gocui.KeyEnter:
 			ubluin(g, v, stdin)
 		case key == gocui.KeyArrowDown:
-			v.MoveCursor(0, 1, false)
+			v.MoveCursor(0-cx, 0, false)
+			v.Clear()
+			for _, ch := range forwardHistory() {
+				v.EditWrite(ch)
+			}
 		case key == gocui.KeyArrowUp:
-			v.MoveCursor(0, -1, false)
+			v.MoveCursor(0-cx, 0, false)
+			v.Clear()
+			for _, ch := range backHistory() {
+				v.EditWrite(ch)
+			}
 		case key == gocui.KeyArrowLeft:
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
