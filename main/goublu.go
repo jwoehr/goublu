@@ -9,6 +9,7 @@ import (
 	"bufio"
 	"fmt"
 	"github.com/jroimartin/gocui"
+	"github.com/jwoehr/goublu"
 	"github.com/nsf/termbox-go"
 	"io"
 	"log"
@@ -20,58 +21,22 @@ import (
 
 var commandLineEditor gocui.Editor
 
-var commandLineHistory = make([]string, 0, 20)
-
-var commandPointer = -1
-
-func appendHistory(l string) {
-	commandLineHistory = append(commandLineHistory, strings.TrimSpace(l))
-	commandPointer = len(commandLineHistory) - 1
-}
-
-func backHistory() string {
-	var result string
-	if commandPointer > -1 {
-		result = commandLineHistory[commandPointer]
-		commandPointer = max(commandPointer-1, -1)
-	} else {
-		commandPointer = -1 // so we can't over-decrement
-	}
-	return strings.TrimSpace(result)
-}
-
-func forwardHistory() string {
-	var result string
-	if -1 < commandPointer && commandPointer < len(commandLineHistory) {
-		result = commandLineHistory[commandPointer]
-		commandPointer = min(commandPointer+1, len(commandLineHistory)-1)
-	} else {
-		if commandPointer == -1 {
-			commandPointer = 0
-			if len(commandLineHistory) > 0 {
-				result = commandLineHistory[commandPointer]
-			}
-			commandPointer = min(commandPointer+1, len(commandLineHistory)-1)
-		} else {
-			commandPointer = len(commandLineHistory) - 1 // so we can't over-increment
-		}
-	}
-	return strings.TrimSpace(result)
-}
+var history *goublu.History = goublu.NewHistory()
 
 // How far from bottom we reserve our input area
-const inputLineOffset = 2
+const inputLineOffset = 3
 
 // Obligatory layout redraw function
 func layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
-	if v, err := g.SetView("ubluout", -1, -1, maxX, maxY-inputLineOffset); err != nil {
+	if v, err := g.SetView("ubluout", 0, 0, maxX-1, maxY-inputLineOffset); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
 		v.Autoscroll = true
+		v.Title = "Ublu Output"
 	}
-	if v, err := g.SetView("ubluin", -1, maxY-inputLineOffset, maxX, maxY); err != nil {
+	if v, err := g.SetView("ubluin", 0, maxY-inputLineOffset, maxX-1, maxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
@@ -79,6 +44,7 @@ func layout(g *gocui.Gui) error {
 		v.Editable = true
 		v.Editor = commandLineEditor
 		v.Wrap = true
+		v.Title = "Ublu Input"
 		if _, err := g.SetCurrentView("ubluin"); err != nil {
 			return err
 		}
@@ -108,7 +74,7 @@ func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser) {
 		fmt.Fprint(w, "> "+l+"\n")
 		io.WriteString(stdin, l+"\n")
 	}
-	appendHistory(l)
+	history.Append(l)
 	v.Clear()
 	v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
 }
@@ -123,26 +89,12 @@ func ubluout(g *gocui.Gui, text string) {
 	width, _ := g.Size()
 	// This isn't right, we'll have to deal with rune width instead
 	for i := 0; i < count; i = i + width {
-		fmt.Fprint(v, text[i:min(count-1, i+width)])
+		fmt.Fprint(v, text[i:goublu.Min(count-1, i+width)])
 		if i < count-1 {
 			fmt.Fprint(v, "\n")
 		}
 	}
 	termbox.Interrupt()
-}
-
-func max(x, y int) int {
-	if x > y {
-		return x
-	}
-	return y
-}
-
-func min(x, y int) int {
-	if x < y {
-		return x
-	}
-	return y
 }
 
 func main() {
@@ -213,13 +165,13 @@ func main() {
 		case key == gocui.KeyArrowDown:
 			v.MoveCursor(0-cx, 0, false)
 			v.Clear()
-			for _, ch := range forwardHistory() {
+			for _, ch := range history.Forward() {
 				v.EditWrite(ch)
 			}
 		case key == gocui.KeyArrowUp:
 			v.MoveCursor(0-cx, 0, false)
 			v.Clear()
-			for _, ch := range backHistory() {
+			for _, ch := range history.Back() {
 				v.EditWrite(ch)
 			}
 		case key == gocui.KeyArrowLeft:

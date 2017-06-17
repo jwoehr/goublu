@@ -8,8 +8,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 ## Usage
 
 * Fetch:  `go get github.com/jwoehr/goublu`
-* Build:  `go build goublu.go`
-* Invoke: `goublu ublu_arg ublu_arg ...`
+* Build:  `cd $GOPATH/src/github.com/jwoehr/goublu/main; go build goublu.go`
+* Invoke: `./goublu ublu_arg ublu_arg ...`
 * Assumes Ublu is found in `/opt/ublu/ublu.jar`
 * Basic line editing
 	* Ctl-a move to head of line
