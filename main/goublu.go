@@ -21,8 +21,6 @@ import (
 
 var commandLineEditor gocui.Editor
 
-var history *goublu.History = goublu.NewHistory()
-
 // How far from bottom we reserve our input area
 const inputLineOffset = 3
 
@@ -60,7 +58,7 @@ func quit(g *gocui.Gui, v *gocui.View) error {
 */
 
 // Pipe input to Ublu
-func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser) {
+func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser, history *goublu.History) {
 	var l string
 	var err error
 	cx, cy := v.Cursor()
@@ -98,6 +96,8 @@ func ubluout(g *gocui.Gui, text string) {
 }
 
 func main() {
+
+	history := goublu.NewHistory()
 
 	// Prepare command
 	myCmds := []string{"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
@@ -161,7 +161,7 @@ func main() {
 		case key == gocui.KeyInsert:
 			v.Overwrite = !v.Overwrite
 		case key == gocui.KeyEnter:
-			ubluin(g, v, stdin)
+			ubluin(g, v, stdin, history)
 		case key == gocui.KeyArrowDown:
 			v.MoveCursor(0-cx, 0, false)
 			v.Clear()
