@@ -19,6 +19,7 @@ import (
 	"strings"
 )
 
+var options *goublu.Options
 var commandLineEditor gocui.Editor
 var allOut string
 
@@ -32,19 +33,23 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = "Ublu Output"
+		v.Title = " Ublu Output - F4 to save to file "
 		v.Autoscroll = true
 		v.Wrap = true
+		v.BgColor = options.BgColorOut
+		v.FgColor = options.FgColorOut
 	}
 	if v, err := g.SetView("ubluin", 0, maxY-inputLineOffset, maxX-1, maxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = "Ublu Input"
+		v.Title = " Ublu Input "
 		v.Autoscroll = true
 		v.Editable = true
 		v.Editor = commandLineEditor
 		v.Wrap = true
+		v.BgColor = options.BgColorIn
+		v.FgColor = options.FgColorIn
 	}
 	if _, err := g.SetCurrentView("ubluin"); err != nil {
 		return err
@@ -84,10 +89,11 @@ func ubluout(g *gocui.Gui, text string) {
 
 func main() {
 
+	options = goublu.NewOptions()
 	history := goublu.NewHistory()
 
 	// Prepare command
-	myCmds := []string{"-jar", "/opt/ublu/ublu.jar", "-g", "--"}
+	myCmds := []string{"-jar", options.Ubludir + "/ublu.jar", "-g", "--"}
 	ubluArgs := append(myCmds, os.Args[1:]...)
 	cmd := exec.Command("java", ubluArgs...)
 
@@ -180,12 +186,12 @@ func main() {
 				v.EditDelete(false)
 			}
 		case key == gocui.KeyF4:
-			f, err := ioutil.TempFile("", "goublu.out.")
+			f, err := ioutil.TempFile(options.SaveOutDir, "goublu.out.")
 			if err != nil {
 				log.Panicln(err)
 			}
 			ubluout(g, "Saving output to "+f.Name()+"\n")
-			f.Write([]byte(allOut))			
+			f.Write([]byte(allOut))
 			f.Close()
 		}
 	})
@@ -198,7 +204,7 @@ func main() {
 			log.Panicln(err)
 		}
 	}()
-	
+
 	cmd.Run()
 
 	g.Close()
