@@ -49,7 +49,6 @@ func layout(g *gocui.Gui) error {
 	if _, err := g.SetCurrentView("ubluin"); err != nil {
 		return err
 	}
-
 	return nil
 }
 
@@ -63,7 +62,7 @@ func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser, history *goublu.H
 		l = ""
 	}
 	l = strings.Trim(strings.TrimSpace(l), "\000")
-	ubluout(g, "> "+l+"\n")
+	ubluout(g, l+"\n")
 	io.WriteString(stdin, l+"\n")
 	if l != "" {
 		history.Append(l)
@@ -185,8 +184,8 @@ func main() {
 			if err != nil {
 				log.Panicln(err)
 			}
-			f.Write([]byte(allOut))
-			ubluout(g, "Output saved to "+f.Name()+"\n")
+			ubluout(g, "Saving output to "+f.Name()+"\n")
+			f.Write([]byte(allOut))			
 			f.Close()
 		}
 	})
@@ -199,7 +198,7 @@ func main() {
 			log.Panicln(err)
 		}
 	}()
-
+	
 	cmd.Run()
 
 	g.Close()
