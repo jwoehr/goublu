@@ -27,5 +27,13 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 * History
 	* Up-arrow previous command
 	* Down-arrow next command
+	
+## Bugs
+
+* Serious
+	* Ublu prompts for a password when an AS400 object is created with an invalid password and does not echo. However,
+	Goublu **will indeed echo the password** even though Ublu's password prompt says the password will not be echoed.
+* Trivial
+	* Each time the same command line is repeated from Goublu history, one more space is appended.
 
 Jack Woehr 2017-06-16

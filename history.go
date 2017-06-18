@@ -10,7 +10,7 @@ type History struct {
 
 func NewHistory() *History {
 	h := &History{}
-	h.commandLines = make([]string, 0, 20)
+	h.commandLines = make([]string, 0, 0)
 	h.commandPointer = -1
 	return h
 }

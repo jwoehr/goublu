@@ -16,7 +16,6 @@ import (
 	"os"
 	"os/exec"
 	"strings"
-	// "unicode/utf8"
 )
 
 var commandLineEditor gocui.Editor
@@ -31,31 +30,25 @@ func layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Autoscroll = true
 		v.Title = "Ublu Output"
+		v.Autoscroll = true
+		v.Wrap = true
 	}
 	if v, err := g.SetView("ubluin", 0, maxY-inputLineOffset, maxX-1, maxY-1); err != nil {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
+		v.Title = "Ublu Input"
 		v.Autoscroll = true
 		v.Editable = true
 		v.Editor = commandLineEditor
 		v.Wrap = true
-		v.Title = "Ublu Input"
 		if _, err := g.SetCurrentView("ubluin"); err != nil {
 			return err
 		}
 	}
 	return nil
 }
-
-/*
-// Exit via the gui instead of via Ublu
-func quit(g *gocui.Gui, v *gocui.View) error {
-	return gocui.ErrQuit
-}
-*/
 
 // Pipe input to Ublu
 func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser, history *goublu.History) {
@@ -83,15 +76,7 @@ func ubluout(g *gocui.Gui, text string) {
 	if err != nil {
 		// handle error
 	}
-	count := len(text)
-	width, _ := g.Size()
-	// This isn't right, we'll have to deal with rune width instead
-	for i := 0; i < count; i = i + width {
-		fmt.Fprint(v, text[i:goublu.Min(count-1, i+width)])
-		if i < count-1 {
-			fmt.Fprint(v, "\n")
-		}
-	}
+	fmt.Fprint(v, text)
 	termbox.Interrupt()
 }
 
@@ -194,8 +179,6 @@ func main() {
 			}
 		}
 	})
-
-	// defer g.Close()
 
 	g.Cursor = true
 	g.SetManagerFunc(layout)
