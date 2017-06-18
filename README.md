@@ -32,9 +32,10 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 		* You can do this as many times as you like during a session, a new file is created each time.
 		
 ## Notes
-	* The Ublu prompt appears on a line by itself in Goublu.
-	* Goublu "history" is input line recall and is separate from Ublu's own `history` command.
-	* Any Ublu application program output should include a newline as the Goublu output mechanism requires it.
+
+* The Ublu prompt appears on a line by itself in Goublu.
+* Goublu "history" is input line recall and is separate from Ublu's own `history` command.
+* Any Ublu application program output should include a newline as the Goublu output mechanism requires it.
 
 ## Bugs
 
