@@ -27,6 +27,9 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 * History
 	* Up-arrow previous command
 	* Down-arrow next command
+	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
+		* Output announces the save file name
+		* You can do this as many times as you like during a session, a new file is created each time.
 	
 ## Bugs
 
@@ -34,6 +37,6 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Ublu prompts for a password when an AS400 object is created with an invalid password and does not echo. However,
 	Goublu **will indeed echo the password** even though Ublu's password prompt says the password will not be echoed.
 * Trivial
-	* Each time the same command line is repeated from Goublu history, one more space is appended.
+	* None at this time
 
-Jack Woehr 2017-06-16
+Jack Woehr 2017-06-18

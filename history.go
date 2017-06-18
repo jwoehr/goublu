@@ -1,13 +1,13 @@
 // History provides command line history in the goublu Ublu input area
 package goublu
 
-import "strings"
-
+// Keeps history
 type History struct {
 	commandLines   []string
 	commandPointer int
 }
 
+// Ctor
 func NewHistory() *History {
 	h := &History{}
 	h.commandLines = make([]string, 0, 0)
@@ -15,11 +15,14 @@ func NewHistory() *History {
 	return h
 }
 
+// Postpends a history line
 func (h *History) Append(l string) {
-	h.commandLines = append(h.commandLines, strings.TrimSpace(l))
+	h.commandLines = append(h.commandLines, l)
 	h.commandPointer = len(h.commandLines) - 1
 }
 
+// Returns the next backwards history line, decrementing the pointer for
+// next history line request. The pointer is floored and does not wrap.
 func (h *History) Back() string {
 	var result string
 	if h.commandPointer > -1 {
@@ -28,9 +31,11 @@ func (h *History) Back() string {
 	} else {
 		h.commandPointer = -1 // so we can't over-decrement
 	}
-	return strings.TrimSpace(result)
+	return result
 }
 
+// Returns the next forwards history line, incrementing the pointer for
+// next history line request. The pointer is roofed and does not wrap.
 func (h *History) Forward() string {
 	var result string
 	if -1 < h.commandPointer && h.commandPointer < len(h.commandLines) {
@@ -47,7 +52,7 @@ func (h *History) Forward() string {
 			h.commandPointer = len(h.commandLines) - 1 // so we can't over-increment
 		}
 	}
-	return strings.TrimSpace(result)
+	return result
 }
 
 func Max(x, y int) int {

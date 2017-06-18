@@ -12,6 +12,7 @@ import (
 	"github.com/jwoehr/goublu"
 	"github.com/nsf/termbox-go"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
@@ -19,6 +20,7 @@ import (
 )
 
 var commandLineEditor gocui.Editor
+var allOut string
 
 // How far from bottom we reserve our input area
 const inputLineOffset = 3
@@ -43,10 +45,11 @@ func layout(g *gocui.Gui) error {
 		v.Editable = true
 		v.Editor = commandLineEditor
 		v.Wrap = true
-		if _, err := g.SetCurrentView("ubluin"); err != nil {
-			return err
-		}
 	}
+	if _, err := g.SetCurrentView("ubluin"); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -59,9 +62,8 @@ func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser, history *goublu.H
 	if l, err = v.Line(cy); err != nil {
 		l = ""
 	}
-	l = strings.TrimSpace(l)
-	w, _ := g.View("ubluout")
-	fmt.Fprint(w, "> "+l+"\n")
+	l = strings.Trim(strings.TrimSpace(l), "\000")
+	ubluout(g, "> "+l+"\n")
 	io.WriteString(stdin, l+"\n")
 	if l != "" {
 		history.Append(l)
@@ -77,6 +79,7 @@ func ubluout(g *gocui.Gui, text string) {
 		// handle error
 	}
 	fmt.Fprint(v, text)
+	allOut = allOut + text
 	termbox.Interrupt()
 }
 
@@ -149,14 +152,14 @@ func main() {
 			ubluin(g, v, stdin, history)
 			termbox.Interrupt() // for good luck
 		case key == gocui.KeyArrowDown:
-			v.MoveCursor(0-cx, 0, false)
 			v.Clear()
+			v.MoveCursor(0-cx, 0, false)
 			for _, ch := range history.Forward() {
 				v.EditWrite(ch)
 			}
 		case key == gocui.KeyArrowUp:
-			v.MoveCursor(0-cx, 0, false)
 			v.Clear()
+			v.MoveCursor(0-cx, 0, false)
 			for _, ch := range history.Back() {
 				v.EditWrite(ch)
 			}
@@ -177,6 +180,14 @@ func main() {
 			for i := cy; i < gy; i++ {
 				v.EditDelete(false)
 			}
+		case key == gocui.KeyF4:
+			f, err := ioutil.TempFile("", "goublu.out.")
+			if err != nil {
+				log.Panicln(err)
+			}
+			f.Write([]byte(allOut))
+			ubluout(g, "Output saved to "+f.Name()+"\n")
+			f.Close()
 		}
 	})
 
