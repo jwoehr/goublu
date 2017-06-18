@@ -68,11 +68,11 @@ func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser, history *goublu.H
 	}
 	l = strings.TrimSpace(l)
 	w, _ := g.View("ubluout")
+	fmt.Fprint(w, "> "+l+"\n")
+	io.WriteString(stdin, l+"\n")
 	if l != "" {
-		fmt.Fprint(w, "> "+l+"\n")
-		io.WriteString(stdin, l+"\n")
+		history.Append(l)
 	}
-	history.Append(l)
 	v.Clear()
 	v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
 }
@@ -162,6 +162,7 @@ func main() {
 			v.Overwrite = !v.Overwrite
 		case key == gocui.KeyEnter:
 			ubluin(g, v, stdin, history)
+			termbox.Interrupt() // for good luck
 		case key == gocui.KeyArrowDown:
 			v.MoveCursor(0-cx, 0, false)
 			v.Clear()
