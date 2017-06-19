@@ -10,30 +10,30 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 * Fetch:  `go get -u github.com/jwoehr/goublu`
 * Build:  `cd $GOPATH/src/github.com/jwoehr/goublu/main; go build goublu.go`
 * Invoke: `./goublu [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
-	* If the first argument to goublu is -g, the next element in the command line is assumed
+	* If the first argument to goublu is `-g` then the next element in the command line is assumed
 	to be a string of Goublu property-like options of the form Opt=Value, each option separated from
 	the next by `:` . All remaining commandline arguments are passed to Ublu. The Goublu options and their
 	values are case-sensitive and are as follows: 
-		* UbluDir
+		* `UbluDir`
 			* abs path to dir where ublu.jar resides, default `/opt/ublu`
-		* SaveOutDir
+		* `SaveOutDir`
 			* abs path to where pressing F4 saves the output text, default `/tmp`
-		* BgColorIn
+		* `BgColorIn`
 			* Input background color, one of:
-				* ColorBlack
-				* ColorRed
-				* ColorGreen
-				* ColorYellow
-				* ColorBlue
-				* ColorMagenta
-				* ColorCyan
-				* ColorWhite
-				* ColorDefault (default terminal colors)
-		* FgColorIn
+				* `ColorBlack`
+				* `ColorRed`
+				* `ColorGreen`
+				* `ColorYellow`
+				* `ColorBlue`
+				* `ColorMagenta`
+				* `ColorCyan`
+				* `ColorWhite`
+				* `ColorDefault` (default terminal colors)
+		* `FgColorIn`
 			* Input foreground color, as above
-		* BgColorOut
+		* `BgColorOut`
 			* Output background color, as above
-		* FgColorOut
+		* `FgColorOut`
 			* Output foreground color, as above			
 * Assumes in absence of property set as above that Ublu is found in `/opt/ublu/ublu.jar`
 * Basic line editing
