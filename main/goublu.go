@@ -88,15 +88,15 @@ func ubluout(g *gocui.Gui, text string) {
 }
 
 func main() {
-
-	options = goublu.NewOptions()
-	// options.FromPropStrings("BgColorOut=ColorRed:FgColorOut=ColorBlue")
-	
 	history := goublu.NewHistory()
-
+	options = goublu.NewOptions()
+	args 	:= goublu.NewArgs(os.Args[:])
+	// options.FromPropStrings("BgColorOut=ColorRed:FgColorOut=ColorBlue")
+	options.FromPropStrings(args.Goubluargs)
+	
 	// Prepare command
 	myCmds := []string{"-jar", options.UbluDir + "/ublu.jar", "-g", "--"}
-	ubluArgs := append(myCmds, os.Args[1:]...)
+	ubluArgs := append(myCmds, args.Ubluargs[:]...)
 	cmd := exec.Command("java", ubluArgs...)
 
 	// Pipes
