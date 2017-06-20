@@ -1,10 +1,11 @@
 // History provides command line history in the goublu Ublu input area.
 package goublu
 
-// Keeps history lines from the goublu input line.
+// Keeps history lines from the goublu input line and output from the console out.
 type History struct {
 	commandLines   []string
 	commandPointer int
+	AllOut         string
 }
 
 // Ctor
@@ -53,6 +54,11 @@ func (h *History) Forward() string {
 		}
 	}
 	return result
+}
+
+// Adds more output text to the complete console out text.
+func (h *History) AppendAllOut(text string) {
+	h.AllOut = h.AllOut + text
 }
 
 // Returns the max of two ints.

@@ -9,93 +9,13 @@ import (
 	"fmt"
 	"github.com/jroimartin/gocui"
 	"github.com/jwoehr/goublu"
-	"github.com/nsf/termbox-go"
-	"io"
-	"io/ioutil"
 	"log"
 	"os"
-	"strings"
 )
-
-var options *goublu.Options
-var commandLineEditor gocui.Editor
-var allOut string
-
-// How far from bottom we reserve our input area
-const inputLineOffset = 3
-
-type UbluManager struct {
-}
-
-func NewUbluManager() (u *UbluManager) {
-	u = &UbluManager{}
-	return u
-}
-
-// Obligatory layout redraw function
-func (*UbluManager) Layout(g *gocui.Gui) error {
-	maxX, maxY := g.Size()
-	if v, err := g.SetView("ubluout", 0, 0, maxX-1, maxY-inputLineOffset); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Title = " Ublu Output - F4 to save to file "
-		v.Autoscroll = true
-		v.Wrap = true
-		v.BgColor = options.BgColorOut
-		v.FgColor = options.FgColorOut
-	}
-	if v, err := g.SetView("ubluin", 0, maxY-inputLineOffset, maxX-1, maxY-1); err != nil {
-		if err != gocui.ErrUnknownView {
-			return err
-		}
-		v.Title = " Ublu Input "
-		v.Autoscroll = true
-		v.Editable = true
-		v.Editor = commandLineEditor
-		v.Wrap = true
-		v.BgColor = options.BgColorIn
-		v.FgColor = options.FgColorIn
-	}
-	if _, err := g.SetCurrentView("ubluin"); err != nil {
-		return err
-	}
-	return nil
-}
-
-// Pipe input to Ublu
-func ubluin(g *gocui.Gui, v *gocui.View, stdin io.WriteCloser, history *goublu.History) {
-	var l string
-	var err error
-	cx, cy := v.Cursor()
-	_, gy := g.Size()
-	if l, err = v.Line(cy); err != nil {
-		l = ""
-	}
-	l = strings.Trim(strings.TrimSpace(l), "\000")
-	ubluout(g, l+"\n")
-	io.WriteString(stdin, l+"\n")
-	if l != "" {
-		history.Append(l)
-	}
-	v.Clear()
-	v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
-}
-
-// Write to console output from Ublu
-func ubluout(g *gocui.Gui, text string) {
-	v, err := g.View("ubluout")
-	if err != nil {
-		// handle error
-	}
-	fmt.Fprint(v, text)
-	allOut = allOut + text
-	termbox.Interrupt()
-}
 
 func main() {
 	args := goublu.NewArgs(os.Args[:])
-	options = goublu.NewOptions()
+	options := goublu.NewOptions()
 	// options.FromPropStrings("BgColorOut=ColorRed:FgColorOut=ColorBlue")
 	options.FromPropStrings(args.Goubluargs)
 	ublu := goublu.NewUblu(args, options)
@@ -109,11 +29,15 @@ func main() {
 		g.Mouse = true
 	}
 
+	um := goublu.NewUbluManager(ublu, g, options, history)
+	g.SetManager(um)
+	g.Cursor = true
+
 	// Deliver Ublu's stdout
 	go func() {
 		for {
 			text, _ := ublu.OutReader.ReadString('\n')
-			ubluout(g, text)
+			um.Ubluout(g, text)
 		}
 	}()
 
@@ -121,76 +45,11 @@ func main() {
 	go func() {
 		for {
 			text, _ := ublu.ErrReader.ReadString('\n')
-			ubluout(g, text)
+			um.Ubluout(g, text)
 		}
 	}()
 
-	commandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
-		gx, gy := g.Size()
-		cx, cy := v.Cursor()
-		text, _ := v.Line(cy)
-
-		// Shut up compiler
-		gx = gx
-		cy = cy
-
-		switch {
-		case ch != 0 && mod == 0:
-			v.EditWrite(ch)
-		case key == gocui.KeySpace:
-			v.EditWrite(' ')
-		case key == gocui.KeyBackspace || key == gocui.KeyBackspace2:
-			v.EditDelete(true)
-		case key == gocui.KeyDelete:
-			v.EditDelete(false)
-		case key == gocui.KeyInsert:
-			v.Overwrite = !v.Overwrite
-		case key == gocui.KeyEnter:
-			ubluin(g, v, ublu.Stdin, history)
-			termbox.Interrupt() // for good luck
-		case key == gocui.KeyArrowDown:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range history.Forward() {
-				v.EditWrite(ch)
-			}
-		case key == gocui.KeyArrowUp:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range history.Back() {
-				v.EditWrite(ch)
-			}
-		case key == gocui.KeyArrowLeft:
-			v.MoveCursor(-1, 0, false)
-		case key == gocui.KeyArrowRight:
-			v.MoveCursor(1, 0, false)
-		case key == gocui.KeyCtrlA:
-			v.MoveCursor(0-cx, 0, false)
-		case key == gocui.KeyCtrlB:
-			v.MoveCursor(-1, 0, false)
-		case key == gocui.KeyCtrlE:
-			v.MoveCursor(len(text)-cx, 0, false)
-		case key == gocui.KeyCtrlF:
-			v.MoveCursor(1, 0, false)
-		case key == gocui.KeyCtrlK:
-			// this isn't quite correct but sorta works
-			for i := cy; i < gy; i++ {
-				v.EditDelete(false)
-			}
-		case key == gocui.KeyF4:
-			f, err := ioutil.TempFile(options.SaveOutDir, "goublu.out.")
-			if err != nil {
-				log.Panicln(err)
-			}
-			ubluout(g, "Saving output to "+f.Name()+"\n")
-			f.Write([]byte(allOut))
-			f.Close()
-		}
-	})
-
-	g.Cursor = true
-	g.SetManager(NewUbluManager())
-
+	// Run the Gui
 	go func() {
 		if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
 			log.Panicln(err)
