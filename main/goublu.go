@@ -6,7 +6,6 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
 	"github.com/jroimartin/gocui"
 	"github.com/jwoehr/goublu"
@@ -15,7 +14,6 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
-	"os/exec"
 	"strings"
 )
 
@@ -29,13 +27,13 @@ const inputLineOffset = 3
 type UbluManager struct {
 }
 
-func NewUbluManager () (u *UbluManager) {
-	u = &UbluManager {}
+func NewUbluManager() (u *UbluManager) {
+	u = &UbluManager{}
 	return u
 }
 
 // Obligatory layout redraw function
-func  (*UbluManager) Layout(g *gocui.Gui) error {
+func (*UbluManager) Layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	if v, err := g.SetView("ubluout", 0, 0, maxX-1, maxY-inputLineOffset); err != nil {
 		if err != gocui.ErrUnknownView {
@@ -96,28 +94,12 @@ func ubluout(g *gocui.Gui, text string) {
 }
 
 func main() {
-	history := goublu.NewHistory()
+	args := goublu.NewArgs(os.Args[:])
 	options = goublu.NewOptions()
-	args 	:= goublu.NewArgs(os.Args[:])
 	// options.FromPropStrings("BgColorOut=ColorRed:FgColorOut=ColorBlue")
 	options.FromPropStrings(args.Goubluargs)
-	
-	// Prepare command
-	myCmds := []string{"-jar", options.UbluDir + "/ublu.jar", "-g", "--"}
-	ubluArgs := append(myCmds, args.Ubluargs[:]...)
-	cmd := exec.Command("java", ubluArgs...)
-
-	// Pipes
-	stdin, _ := cmd.StdinPipe()
-	stdout, _ := cmd.StdoutPipe()
-	stderr, _ := cmd.StderrPipe()
-
-	defer stdout.Close()
-	defer stderr.Close()
-
-	// Readers
-	outreader := bufio.NewReader(stdout)
-	errreader := bufio.NewReader(stderr)
+	ublu := goublu.NewUblu(args, options)
+	history := goublu.NewHistory()
 
 	// cogui
 	g, err := gocui.NewGui(gocui.OutputNormal)
@@ -130,7 +112,7 @@ func main() {
 	// Deliver Ublu's stdout
 	go func() {
 		for {
-			text, _ := outreader.ReadString('\n')
+			text, _ := ublu.OutReader.ReadString('\n')
 			ubluout(g, text)
 		}
 	}()
@@ -138,7 +120,7 @@ func main() {
 	// Deliver Ublu's stderr
 	go func() {
 		for {
-			text, _ := errreader.ReadString('\n')
+			text, _ := ublu.ErrReader.ReadString('\n')
 			ubluout(g, text)
 		}
 	}()
@@ -164,7 +146,7 @@ func main() {
 		case key == gocui.KeyInsert:
 			v.Overwrite = !v.Overwrite
 		case key == gocui.KeyEnter:
-			ubluin(g, v, stdin, history)
+			ubluin(g, v, ublu.Stdin, history)
 			termbox.Interrupt() // for good luck
 		case key == gocui.KeyArrowDown:
 			v.Clear()
@@ -215,9 +197,11 @@ func main() {
 		}
 	}()
 
-	cmd.Run()
+	ublu.Run()
 
 	g.Close()
+	ublu.Close()
+
 	fmt.Println("Ublu has exited.")
 	fmt.Println("Goodbye from Goublu!")
 }

@@ -1,7 +1,7 @@
-// History provides command line history in the goublu Ublu input area
+// History provides command line history in the goublu Ublu input area.
 package goublu
 
-// Keeps history
+// Keeps history lines from the goublu input line.
 type History struct {
 	commandLines   []string
 	commandPointer int
@@ -55,6 +55,7 @@ func (h *History) Forward() string {
 	return result
 }
 
+// Returns the max of two ints.
 func Max(x, y int) int {
 	if x > y {
 		return x
@@ -62,6 +63,7 @@ func Max(x, y int) int {
 	return y
 }
 
+// Returns the min of two ints.
 func Min(x, y int) int {
 	if x < y {
 		return x

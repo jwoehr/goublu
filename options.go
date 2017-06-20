@@ -1,4 +1,4 @@
-// Options sorts out user options for Goublu.
+// Options parses and stores user options for Goublu.
 package goublu
 
 import (
@@ -21,8 +21,8 @@ type Options struct {
 }
 
 // NewOptions is a ctor with default options.
-func NewOptions() *Options {
-	opts := &Options{
+func NewOptions() (opts *Options) {
+	opts = &Options{
 		UbluDir:    "/opt/ublu/",
 		SaveOutDir: "/tmp",
 		BgColorIn:  gocui.ColorDefault,
@@ -33,6 +33,7 @@ func NewOptions() *Options {
 	return opts
 }
 
+// Parses and sets options from a property file.
 func (o *Options) FromPropsFile(fname string) (err error) {
 	f, err := os.Open(fname)
 	if err == nil {
@@ -49,6 +50,7 @@ func (o *Options) FromPropsFile(fname string) (err error) {
 	return err
 }
 
+// Parses and sets options from prop=val pairs separated by ':' .
 func (o *Options) FromPropStrings(props string) (err error) {
 	err = nil
 	rx := regexp.MustCompile(":")
@@ -62,6 +64,7 @@ func (o *Options) FromPropStrings(props string) (err error) {
 	return err
 }
 
+// Parses and sets an option from a single prop=val pair.
 func (o *Options) FromPropString(prop string) (err error) {
 	err = nil
 	rx := regexp.MustCompile("=")
@@ -89,6 +92,7 @@ func (o *Options) FromPropString(prop string) (err error) {
 	return err
 }
 
+// Returns the named gocui color Attribute.
 func ColorFromName(name string) (color gocui.Attribute) {
 	switch name {
 	case "ColorBlack":
