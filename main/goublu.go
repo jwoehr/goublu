@@ -26,8 +26,16 @@ var allOut string
 // How far from bottom we reserve our input area
 const inputLineOffset = 3
 
+type UbluManager struct {
+}
+
+func NewUbluManager () (u *UbluManager) {
+	u = &UbluManager {}
+	return u
+}
+
 // Obligatory layout redraw function
-func layout(g *gocui.Gui) error {
+func  (*UbluManager) Layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	if v, err := g.SetView("ubluout", 0, 0, maxX-1, maxY-inputLineOffset); err != nil {
 		if err != gocui.ErrUnknownView {
@@ -199,7 +207,7 @@ func main() {
 	})
 
 	g.Cursor = true
-	g.SetManagerFunc(layout)
+	g.SetManager(NewUbluManager())
 
 	go func() {
 		if err := g.MainLoop(); err != nil && err != gocui.ErrQuit {
