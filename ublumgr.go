@@ -137,7 +137,7 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = " Ublu Output - | F1 Goublu Help | F4 Save Output | "
+		v.Title = " Ublu Output  [F1 Goublu Help] [F4 Save Output] "
 		v.Autoscroll = true
 		v.Wrap = true
 		v.BgColor = um.Opts.BgColorOut
