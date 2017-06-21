@@ -54,6 +54,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 * History
 	* Up-arrow previous command
 	* Down-arrow next command
+	* F2 shows entire session's output
 	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
 		* Output announces the save file name
 		* You can do this as many times as you like during a session, a new file is created each time.

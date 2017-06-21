@@ -5,7 +5,8 @@ import (
 	"github.com/jwoehr/gocui"
 )
 
-const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other:...] ublu_arg ublu_arg ...\n" +
+const helpstring =
+    "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other:...] ublu_arg ublu_arg ...\n" +
 	"	* If the first argument to goublu is -g then the next element in the command line is assumed\n" +
 	"	to be a string of Goublu property-like options of the form Opt=Value, each option separated from\n" +
 	"	the next by : . All remaining commandline arguments are passed to Ublu. The Goublu options and their\n" +
@@ -44,7 +45,14 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"		* Left-arrow\n" +
 	"		* Right-arrow\n" +
 	"		* Insert\n" +
-	"		* Delete"
+	"		* Delete\n"+
+	"* History\n"+
+	"* Up-arrow previous command\n"+
+	"* Down-arrow next command\n"+
+	"* F2 shows entire session's output\n"+
+	"* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n"+
+	"	* Output announces the save file name\n"+
+	"	* You can do this as many times as you like during a session, a new file is created each time.\n"
 
 func NewHelpReq(um *UbluManager, g *gocui.Gui) *ReqManager {
 	return NewReqManager(um, g, 110, 42, " Goublu Help - F3 to exit ", gocui.ColorDefault, gocui.ColorDefault, helpstring)
