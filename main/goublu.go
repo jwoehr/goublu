@@ -7,7 +7,7 @@ package main
 
 import (
 	"fmt"
-	"github.com/jroimartin/gocui"
+	"github.com/jwoehr/gocui"
 	"github.com/jwoehr/goublu"
 	"log"
 	"os"

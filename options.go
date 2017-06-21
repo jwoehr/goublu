@@ -4,7 +4,7 @@ package goublu
 import (
 	"bufio"
 	"errors"
-	"github.com/jroimartin/gocui"
+	"github.com/jwoehr/gocui"
 	"os"
 	"reflect"
 	"regexp"
