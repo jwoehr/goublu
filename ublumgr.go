@@ -83,6 +83,9 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			for i := cy; i < gy; i++ {
 				v.EditDelete(false)
 			}
+		case key == gocui.KeyF1:
+			rm := NewHelpReq(um, um.G)
+			rm.StartReq()
 		case key == gocui.KeyF4:
 			f, err := ioutil.TempFile(um.Opts.SaveOutDir, "goublu.out.")
 			if err != nil {
@@ -134,7 +137,7 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = " Ublu Output - F4 to save to file "
+		v.Title = " Ublu Output - | F1 Goublu Help | F4 Save Output | "
 		v.Autoscroll = true
 		v.Wrap = true
 		v.BgColor = um.Opts.BgColorOut
