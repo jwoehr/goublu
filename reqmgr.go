@@ -4,25 +4,21 @@ package goublu
 import (
 	"fmt"
 	"github.com/jwoehr/gocui"
-	// "github.com/jwoehr/termbox-go"
-	// "io"
-	// "io/ioutil"
-	// "log"
-	// "strings"
+	"strings"
 )
 
 // A gocui manager for Requestors.
 type ReqManager struct {
-	UM        *UbluManager
-	G         *gocui.Gui
-	X         int
-	Y         int
-	Title     string
-	BgColor   gocui.Attribute
-	FgColor   gocui.Attribute
-	ReqEditor gocui.Editor
-	Text      string
-	// UbluinBuf  string
+	UM         *UbluManager
+	G          *gocui.Gui
+	X          int
+	Y          int
+	Title      string
+	BgColor    gocui.Attribute
+	FgColor    gocui.Attribute
+	ReqEditor  gocui.Editor
+	Text       string
+	UbluinBuf  string
 	UbluoutBuf string
 }
 
@@ -58,10 +54,10 @@ func NewReqManager(um *UbluManager, g *gocui.Gui, x int, y int, title string, bg
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
 		/*
-		case key == gocui.MouseWheelUp:
-			v.MoveCursor(0, -1, false)
-			case key == gocui.MouseWheelDown:
-			v.MoveCursor(0, 1, false)
+			case key == gocui.MouseWheelUp:
+				v.MoveCursor(0, -1, false)
+				case key == gocui.MouseWheelDown:
+				v.MoveCursor(0, 1, false)
 		*/
 		case key == gocui.KeyF3:
 			rm.EndReq()
@@ -84,15 +80,18 @@ func (rm *ReqManager) EndReq() {
 	rm.G.SetManager(rm.UM)
 	rm.UM.Layout(rm.G)
 	v, _ := rm.G.View("Ubluin")
-	// fmt.Fprint(v, rm.UbluinBuf)
+	v.Clear()
+	for _, ch := range strings.Trim(strings.TrimSpace(rm.UbluinBuf), "\000") {
+		v.EditWrite(ch)
+	}
 	v, _ = rm.G.View("Ubluout")
-	fmt.Fprint(v, rm.UbluoutBuf)
+	fmt.Fprintf(v, "%s\n", strings.Trim(strings.TrimSpace(rm.UbluoutBuf), "\000"))
 }
 
 // Shows the requestor.
 func (rm *ReqManager) StartReq() {
 	v, _ := rm.G.View("Ubluin")
-	// rm.UbluinBuf = v.Buffer()
+	rm.UbluinBuf = v.Buffer()
 	v, _ = rm.G.View("Ubluout")
 	rm.UbluoutBuf = v.Buffer()
 	rm.G.SetManager(rm.UM, rm)
@@ -106,7 +105,6 @@ func (rm *ReqManager) Layout(g *gocui.Gui) error {
 			return err
 		}
 		v.Title = " " + rm.Title + " "
-		// v.Autoscroll = true
 		v.Editable = true
 		v.Editor = rm.ReqEditor
 		v.Wrap = true
