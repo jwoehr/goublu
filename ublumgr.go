@@ -66,14 +66,30 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			for _, ch := range um.Hist.Back() {
 				v.EditWrite(ch)
 			}
+		case key == gocui.KeyPgup:
+			v.Clear()
+			v.MoveCursor(0-cx, 0, false)
+			for _, ch := range um.Hist.First() {
+				v.EditWrite(ch)
+			}
+		case key == gocui.KeyPgdn:
+			v.Clear()
+			v.MoveCursor(0-cx, 0, false)
+			for _, ch := range um.Hist.Last() {
+				v.EditWrite(ch)
+			}
 		case key == gocui.KeyArrowLeft:
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
+		case key == gocui.KeyHome:
+			fallthrough
 		case key == gocui.KeyCtrlA:
 			v.MoveCursor(0-cx, 0, false)
 		case key == gocui.KeyCtrlB:
 			v.MoveCursor(-1, 0, false)
+		case key == gocui.KeyEnd:
+			fallthrough
 		case key == gocui.KeyCtrlE:
 			v.MoveCursor(len(text)-cx, 0, false)
 		case key == gocui.KeyCtrlF:

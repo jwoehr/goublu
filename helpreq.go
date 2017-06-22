@@ -49,6 +49,8 @@ const helpstring =
 	"* History\n"+
 	"* Up-arrow previous command\n"+
 	"* Down-arrow next command\n"+
+	"* PgUp first command\n"+
+	"* PgDn last command\n"+
 	"* F2 shows entire session's output\n"+
 	"* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n"+
 	"	* Output announces the save file name\n"+

@@ -56,6 +56,26 @@ func (h *History) Forward() string {
 	return result
 }
 
+// Returns the first history line if any, resetting the pointer if any.
+func (h *History) First() string {
+	var result string
+	if len(h.commandLines) > 0 {
+		h.commandPointer = 0
+		result = h.commandLines[h.commandPointer]
+	}
+	return result
+}
+
+// Returns the last history line if any, resetting the pointer if any.
+func (h *History) Last() string {
+	var result string
+	if len(h.commandLines) > 0 {
+		h.commandPointer = len(h.commandLines) - 1
+		result = h.commandLines[h.commandPointer]
+	}
+	return result
+}
+
 // Adds more output text to the complete console out text.
 func (h *History) AppendAllOut(text string) {
 	h.AllOut = h.AllOut + text
