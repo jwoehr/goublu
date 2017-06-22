@@ -53,6 +53,12 @@ func NewReqManager(um *UbluManager, g *gocui.Gui, x int, y int, title string, bg
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
+		case key == gocui.KeyPgup:
+			ox, oy := v.Origin()
+			v.SetOrigin(ox, oy-20)
+		case key == gocui.KeyPgdn:
+			ox, oy := v.Origin()
+			v.SetOrigin(ox, oy+20)
 		/*
 			case key == gocui.MouseWheelUp:
 				v.MoveCursor(0, -1, false)
