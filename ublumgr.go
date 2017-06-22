@@ -113,6 +113,12 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			um.Ubluout(um.G, "Saving output to "+f.Name()+"\n")
 			f.Write([]byte(um.Hist.AllOut))
 			f.Close()
+		case key == gocui.MouseLeft:
+		case key == gocui.MouseMiddle:
+		case key == gocui.MouseRight:
+		case key == gocui.MouseRelease:
+		case key == gocui.MouseWheelUp:
+		case key == gocui.MouseWheelDown:
 		}
 	})
 
