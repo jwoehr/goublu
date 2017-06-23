@@ -4,6 +4,12 @@ Goublu is a [Go language](http://golang.org) front end that provides a better co
 ![goublu_screenshot](https://user-images.githubusercontent.com/4604036/27308552-63cb78e0-550c-11e7-8d74-3f8e5e4c813f.png)
 
 Goublu is new and works with some limitations.
+	* Works on
+		* OpenBSD
+		* Linux
+		* Mac OS X
+	* Does not work on Windows
+	
 
 Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
 
@@ -73,6 +79,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Ublu prompts for a password when an AS400 object is created with an invalid password and does not echo. However,
 	Goublu **will indeed echo the password** even though Ublu's password prompt says the password will not be echoed.
 * Trivial
-	* None at this time
+	* If the input line is longer than the view, the control key movements and deletes are a little erratic, e.g, you
+	might have to do Ctl-a Ctl-k a few times to clear the line.
+	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
 Jack Woehr 2017-06-18
