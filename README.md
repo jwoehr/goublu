@@ -1,7 +1,7 @@
 # goublu
 Goublu is a [Go language](http://golang.org) front end that provides a better console interface to [Ublu](https://github.com/jwoehr/ublu) than the console support provided by Java.
 
-![goublu_screenshot](https://user-images.githubusercontent.com/4604036/27308552-63cb78e0-550c-11e7-8d74-3f8e5e4c813f.png)
+![goublu_screenshot](https://user-images.githubusercontent.com/4604036/27493843-85b13f0e-5808-11e7-9dba-e749a9d988f9.png)
 
 Goublu is new and works with some limitations.
 * Works on
