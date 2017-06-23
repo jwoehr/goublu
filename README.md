@@ -4,11 +4,12 @@ Goublu is a [Go language](http://golang.org) front end that provides a better co
 ![goublu_screenshot](https://user-images.githubusercontent.com/4604036/27308552-63cb78e0-550c-11e7-8d74-3f8e5e4c813f.png)
 
 Goublu is new and works with some limitations.
-	* Works on
-		* OpenBSD
-		* Linux
-		* Mac OS X
-	* Does not work on Windows
+* Works on
+	* OpenBSD
+	* Linux
+	* Mac OS X
+* Does not work on
+	* Windows
 	
 
 Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
