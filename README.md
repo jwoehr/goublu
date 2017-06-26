@@ -80,8 +80,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Ublu prompts for a password when an AS400 object is created with an invalid password and does not echo. However,
 	Goublu **will indeed echo the password** even though Ublu's password prompt says the password will not be echoed.
 * Trivial
-	* If the input line is longer than the view, the control key movements and deletes are a little erratic, e.g, you
-	might have to do Ctl-a Ctl-k a few times to clear the line.
+	* Command lines longer that the view width of the input line behave erratically in response to edit commands.
 	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
-Jack Woehr 2017-06-18
+Jack Woehr 2017-06-26

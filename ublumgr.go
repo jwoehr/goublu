@@ -37,8 +37,9 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		text, _ := v.Line(cy)
 
 		// Shut up compiler
-		gx = gx
 		cy = cy
+		gx = gx
+		gy = gy
 
 		switch {
 		case ch != 0 && mod == 0:
@@ -82,21 +83,17 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
-		case key == gocui.KeyHome:
-			fallthrough
-		case key == gocui.KeyCtrlA:
+		case key == gocui.KeyCtrlA || key == gocui.KeyHome:
 			v.MoveCursor(0-cx, 0, false)
 		case key == gocui.KeyCtrlB:
 			v.MoveCursor(-1, 0, false)
-		case key == gocui.KeyEnd:
-			fallthrough
-		case key == gocui.KeyCtrlE:
+		case key == gocui.KeyCtrlE || key == gocui.KeyEnd:
 			v.MoveCursor(len(text)-cx, 0, false)
 		case key == gocui.KeyCtrlF:
 			v.MoveCursor(1, 0, false)
 		case key == gocui.KeyCtrlK:
 			// this isn't quite correct but sorta works
-			for i := cy; i < gy; i++ {
+			for i := cy; i < len(text); i++ {
 				v.EditDelete(false)
 			}
 		case key == gocui.KeyF1:
