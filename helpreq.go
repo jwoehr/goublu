@@ -16,7 +16,7 @@ const helpstring =
 	"		* SaveOutDir\n" +
 	"			* abs path to where pressing F4 saves the output text, default /tmp\n" +
 	"		* PropsFile\n" +
-	"       	* abs path to a properties file containing these same option=value pairs\n"+
+	"			* abs path to a properties file containing these same option=value pairs\n"+
 	"		* BgColorIn\n" +
 	"			* Input background color, one of:\n" +
 	"				* ColorBlack\n" +
