@@ -4,10 +4,12 @@ package goublu
 import (
 	"bufio"
 	"errors"
+	/* debug */ // "fmt"
 	"github.com/jwoehr/gocui"
 	"os"
 	"reflect"
 	"regexp"
+	"strings"
 )
 
 // Options holds user options.
@@ -23,7 +25,7 @@ type Options struct {
 // NewOptions is a ctor with default options.
 func NewOptions() (opts *Options) {
 	opts = &Options{
-		UbluDir:    "/opt/ublu/",
+		UbluDir:    "/opt/ublu",
 		SaveOutDir: "/tmp",
 		BgColorIn:  gocui.ColorDefault,
 		FgColorIn:  gocui.ColorDefault,
@@ -67,27 +69,33 @@ func (o *Options) FromPropStrings(props string) (err error) {
 // Parses and sets an option from a single prop=val pair.
 func (o *Options) FromPropString(prop string) (err error) {
 	err = nil
-	rx := regexp.MustCompile("=")
-	s := rx.Split(prop, 2)
-	if len(s) == 2 {
-		switch s[0] {
-		case "UbluDir":
-			o.UbluDir = s[1]
-		case "SaveOutDir":
-			o.SaveOutDir = s[1]
-		case "BgColorIn":
-			o.BgColorIn = ColorFromName(s[1])
-		case "FgColorIn":
-			o.FgColorIn = ColorFromName(s[1])
-		case "BgColorOut":
-			o.BgColorOut = ColorFromName(s[1])
-		case "FgColorOut":
-			o.FgColorOut = ColorFromName(s[1])
-		default:
-			err = errors.New("Unknown property")
+	if !strings.HasPrefix(prop, "#") {
+		rx := regexp.MustCompile("=")
+		s := rx.Split(prop, 2)
+		if len(s) == 2 {
+			val := strings.Trim(strings.TrimSpace(s[1]), "\012")
+			/* debug */ // fmt.Println("Opt " + s[0] + " == " + val)
+			switch s[0] {
+			case "UbluDir":
+				o.UbluDir = val
+			case "SaveOutDir":
+				o.SaveOutDir = val
+			case "BgColorIn":
+				o.BgColorIn = ColorFromName(val)
+			case "FgColorIn":
+				o.FgColorIn = ColorFromName(val)
+			case "BgColorOut":
+				o.BgColorOut = ColorFromName(val)
+			case "FgColorOut":
+				o.FgColorOut = ColorFromName(val)
+			case "PropsFile":
+				o.FromPropsFile(val)
+			default:
+				err = errors.New("Unknown property")
+			}
+		} else {
+			err = errors.New("Invalid property string")
 		}
-	} else {
-		err = errors.New("Invalid property string")
 	}
 	return err
 }

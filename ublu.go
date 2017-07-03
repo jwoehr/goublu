@@ -3,6 +3,7 @@ package goublu
 
 import (
 	"bufio"
+	/* debug */ // "fmt"
 	"io"
 	"os/exec"
 )
@@ -21,7 +22,7 @@ type Ublu struct {
 
 // Returns an initialized *Ublu ready to run.
 func NewUblu(args *Args, options *Options) (u *Ublu) {
-
+	/* debug */ // fmt.Println([]string{"-jar", options.UbluDir + "/ublu.jar", "-g", "--"})
 	myCmds := []string{"-jar", options.UbluDir + "/ublu.jar", "-g", "--"}
 	ubluArgs := append(myCmds, args.Ubluargs[:]...)
 	cmd := exec.Command("java", ubluArgs...)

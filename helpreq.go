@@ -10,11 +10,13 @@ const helpstring =
 	"	* If the first argument to goublu is -g then the next element in the command line is assumed\n" +
 	"	to be a string of Goublu property-like options of the form Opt=Value, each option separated from\n" +
 	"	the next by : . All remaining commandline arguments are passed to Ublu. The Goublu options and their\n" +
-	"	values are case-sensitive and are as follows: \n" +
+	"	values are read and interpreted in order, are case-sensitive and are as follows: \n" +
 	"		* UbluDir\n" +
 	"			* abs path to dir where ublu.jar resides, default /opt/ublu\n" +
 	"		* SaveOutDir\n" +
 	"			* abs path to where pressing F4 saves the output text, default /tmp\n" +
+	"		* PropsFile\n" +
+	"       	* abs path to a properties file containing these same option=value pairs\n"+
 	"		* BgColorIn\n" +
 	"			* Input background color, one of:\n" +
 	"				* ColorBlack\n" +
