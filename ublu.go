@@ -3,9 +3,11 @@ package goublu
 
 import (
 	"bufio"
-	/* debug */ // "fmt"
+	"fmt"
 	"io"
+	"os"
 	"os/exec"
+	"path/filepath"
 )
 
 // Ublu is the controlling structure to run Java against ublu.jar with arguments.
@@ -22,8 +24,16 @@ type Ublu struct {
 
 // Returns an initialized *Ublu ready to run.
 func NewUblu(args *Args, options *Options) (u *Ublu) {
-	/* debug */ // fmt.Println([]string{"-jar", options.UbluDir + "/ublu.jar", "-g", "--"})
-	myCmds := []string{"-jar", options.UbluDir + "/ublu.jar", "-g", "--"}
+
+	ubluFQP := filepath.Join(options.UbluDir, "ublu.jar")
+	finfo, err := os.Stat(ubluFQP)
+
+	if err != nil || finfo.IsDir() {
+		fmt.Printf("%s does not exist or is not a file, please check your UbluDir property.\n", ubluFQP)
+		return nil
+	}
+
+	myCmds := []string{"-jar", ubluFQP, "-g", "--"}
 	ubluArgs := append(myCmds, args.Ubluargs[:]...)
 	cmd := exec.Command("java", ubluArgs...)
 
