@@ -8,7 +8,7 @@ Goublu is new and works with some limitations.
 	* OpenBSD
 	* Linux
 	* Mac OS X
-* Does not work on
+* Works poorly on
 	* Windows
 	
 
