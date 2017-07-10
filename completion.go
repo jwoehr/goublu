@@ -8,120 +8,128 @@ import (
 
 // type Dashes []string
 
-// type Completion map[string] of Dash-Commands keyed by Ublu keywords
-type Completion map[string][]string
+// type Completor map[string] of Dash-Commands keyed by Ublu keywords
+type Completor struct {
+	CMap           map[string][]string
+	LastCompletion []string
+	NextIndex      int
+}
 
-// Return the Completion map
-func NewCompletion() (c Completion) {
-	c = make(Completion)
-	c["as400"] = []string{"-to", "--"}
-	c["ask"] = []string{}
-	c["BREAK"] = []string{}
-	c["bye"] = []string{}
-	c["CALL"] = []string{}
-	c["calljava"] = []string{}
-	c["cim"] = []string{}
-	c["cimi"] = []string{}
-	c["collection"] = []string{}
-	c["commandcall"] = []string{}
-	c["const"] = []string{}
-	c["cs"] = []string{}
-	c["db"] = []string{}
-	c["dbug"] = []string{}
-	c["defun"] = []string{}
-	c["desktop"] = []string{}
-	c["dict"] = []string{}
-	c["DO"] = []string{}
-	c["dpoint"] = []string{}
-	c["dq"] = []string{}
-	c["dta"] = []string{}
-	c["ELSE"] = []string{}
-	c["eval"] = []string{}
-	c["exit"] = []string{}
-	c["file"] = []string{}
-	c["FOR"] = []string{}
-	c["oldftp"] = []string{}
-	c["ftp"] = []string{}
-	c["FUN"] = []string{}
-	c["FUNC"] = []string{}
-	c["gensh"] = []string{}
-	c["help"] = []string{}
-	c["histlog"] = []string{}
-	c["h"] = []string{}
-	c["host"] = []string{}
-	c["history"] = []string{}
-	c["IF"] = []string{}
-	c["ifs"] = []string{}
-	c["include"] = []string{}
-	c["interpret"] = []string{}
-	c["interpreter"] = []string{}
-	c["jmx"] = []string{}
-	c["job"] = []string{}
-	c["joblist"] = []string{}
-	c["joblog"] = []string{}
-	c["jrnl"] = []string{}
-	c["json"] = []string{}
-	c["jvm"] = []string{}
-	c["LOCAL"] = []string{}
-	c["license"] = []string{}
-	c["lifo"] = []string{}
-	c["list"] = []string{}
-	c["monitor"] = []string{}
-	c["msg"] = []string{}
-	c["msgq"] = []string{}
-	c["num"] = []string{}
-	c["objlist"] = []string{}
-	c["objdesc"] = []string{}
-	c["outq"] = []string{}
-	c["ppl"] = []string{}
-	c["printer"] = []string{}
-	c["programcall"] = []string{}
-	c["props"] = []string{}
-	c["put"] = []string{}
-	c["record"] = []string{}
-	c["rs"] = []string{}
-	c["savf"] = []string{}
-	c["savef"] = []string{}
-	c["savesys"] = []string{}
-	c["server"] = []string{}
-	c["sess"] = []string{}
-	c["session"] = []string{}
-	c["sleep"] = []string{}
-	c["smapi"] = []string{}
-	c["sock"] = []string{}
-	c["spoolf"] = []string{}
-	c["spoolflist"] = []string{}
-	c["streamf"] = []string{}
-	c["string"] = []string{}
-	c["subsys"] = []string{}
-	c["SWITCH"] = []string{}
-	c["system"] = []string{}
-	c["sysval"] = []string{}
-	c["TASK"] = []string{}
-	c["test"] = []string{}
-	c["thread"] = []string{}
-	c["THEN"] = []string{}
-	c["THROW"] = []string{}
-	c["tn5250"] = []string{}
-	c["trace"] = []string{}
-	c["TRY"] = []string{}
-	c["tuple"] = []string{}
-	c["usage"] = []string{}
-	c["user"] = []string{}
-	c["userlist"] = []string{}
-	c["WHILE"] = []string{}
-	c["!"] = []string{}
-	c["#"] = []string{}
-	c["#!"] = []string{}
-	c["\\\\"] = []string{}
+// Return the Completor map
+func NewCompletor() (c *Completor) {
+	c = &Completor{
+		CMap:           make(map[string][]string),
+		LastCompletion: make([]string, 0),
+		NextIndex:      0,
+	}
+	c.CMap["as400"] = []string{"-to", "--"}
+	c.CMap["ask"] = []string{}
+	c.CMap["BREAK"] = []string{}
+	c.CMap["bye"] = []string{}
+	c.CMap["CALL"] = []string{}
+	c.CMap["calljava"] = []string{}
+	c.CMap["cim"] = []string{}
+	c.CMap["cimi"] = []string{}
+	c.CMap["collection"] = []string{}
+	c.CMap["commandcall"] = []string{}
+	c.CMap["const"] = []string{}
+	c.CMap["cs"] = []string{}
+	c.CMap["db"] = []string{}
+	c.CMap["dbug"] = []string{}
+	c.CMap["defun"] = []string{}
+	c.CMap["desktop"] = []string{}
+	c.CMap["dict"] = []string{}
+	c.CMap["DO"] = []string{}
+	c.CMap["dpoint"] = []string{}
+	c.CMap["dq"] = []string{}
+	c.CMap["dta"] = []string{}
+	c.CMap["ELSE"] = []string{}
+	c.CMap["eval"] = []string{}
+	c.CMap["exit"] = []string{}
+	c.CMap["file"] = []string{}
+	c.CMap["FOR"] = []string{}
+	c.CMap["oldftp"] = []string{}
+	c.CMap["ftp"] = []string{}
+	c.CMap["FUN"] = []string{}
+	c.CMap["FUNC"] = []string{}
+	c.CMap["gensh"] = []string{}
+	c.CMap["help"] = []string{}
+	c.CMap["histlog"] = []string{}
+	c.CMap["h"] = []string{}
+	c.CMap["host"] = []string{}
+	c.CMap["history"] = []string{}
+	c.CMap["IF"] = []string{}
+	c.CMap["ifs"] = []string{}
+	c.CMap["include"] = []string{}
+	c.CMap["interpret"] = []string{}
+	c.CMap["interpreter"] = []string{}
+	c.CMap["jmx"] = []string{}
+	c.CMap["job"] = []string{}
+	c.CMap["joblist"] = []string{}
+	c.CMap["joblog"] = []string{}
+	c.CMap["jrnl"] = []string{}
+	c.CMap["json"] = []string{}
+	c.CMap["jvm"] = []string{}
+	c.CMap["LOCAL"] = []string{}
+	c.CMap["license"] = []string{}
+	c.CMap["lifo"] = []string{}
+	c.CMap["list"] = []string{}
+	c.CMap["monitor"] = []string{}
+	c.CMap["msg"] = []string{}
+	c.CMap["msgq"] = []string{}
+	c.CMap["num"] = []string{}
+	c.CMap["objlist"] = []string{}
+	c.CMap["objdesc"] = []string{}
+	c.CMap["outq"] = []string{}
+	c.CMap["ppl"] = []string{}
+	c.CMap["printer"] = []string{}
+	c.CMap["programcall"] = []string{}
+	c.CMap["props"] = []string{}
+	c.CMap["put"] = []string{}
+	c.CMap["record"] = []string{}
+	c.CMap["rs"] = []string{}
+	c.CMap["savf"] = []string{}
+	c.CMap["savef"] = []string{}
+	c.CMap["savesys"] = []string{}
+	c.CMap["server"] = []string{}
+	c.CMap["sess"] = []string{}
+	c.CMap["session"] = []string{}
+	c.CMap["sleep"] = []string{}
+	c.CMap["smapi"] = []string{}
+	c.CMap["sock"] = []string{}
+	c.CMap["spoolf"] = []string{}
+	c.CMap["spoolflist"] = []string{}
+	c.CMap["streamf"] = []string{}
+	c.CMap["string"] = []string{}
+	c.CMap["subsys"] = []string{}
+	c.CMap["SWITCH"] = []string{}
+	c.CMap["system"] = []string{}
+	c.CMap["sysval"] = []string{}
+	c.CMap["TASK"] = []string{}
+	c.CMap["test"] = []string{}
+	c.CMap["thread"] = []string{}
+	c.CMap["THEN"] = []string{}
+	c.CMap["THROW"] = []string{}
+	c.CMap["tn5250"] = []string{}
+	c.CMap["trace"] = []string{}
+	c.CMap["TRY"] = []string{}
+	c.CMap["tuple"] = []string{}
+	c.CMap["usage"] = []string{}
+	c.CMap["user"] = []string{}
+	c.CMap["userlist"] = []string{}
+	c.CMap["WHILE"] = []string{}
+	c.CMap["!"] = []string{}
+	c.CMap["#"] = []string{}
+	c.CMap["#!"] = []string{}
+	c.CMap["\\\\"] = []string{}
 	return c
 }
 
 // Zero or more completion candidates returned
-func (c Completion) Complete(partial string) (candidates []string) {
-	candidates = make([]string, 0)
+func (c *Completor) Complete(partial string) (candidate string) {
+	candidates := make([]string, 0)
 	// fmt.Printf("%d\n", len(c))
-	for key, _ := range c {
+	for key, _ := range c.CMap {
 		// fmt.Printf("Partial is |%s|\n", partial)
 		// fmt.Printf("Key is %s\n", key)
 		if strings.HasPrefix(key, partial) {
@@ -132,5 +140,31 @@ func (c Completion) Complete(partial string) (candidates []string) {
 		}
 	}
 	// fmt.Printf("%d\n", len(candidates))
-	return candidates
+	c.Set(candidates)
+	if len(candidates) > 0 {
+		candidate = c.Next()
+	} else {
+		candidate = ""
+	}
+	return candidate
+}
+
+func (c *Completor) Set(completion []string) {
+	c.LastCompletion = completion
+	c.NextIndex = 0
+}
+
+func (c *Completor) Clear() {
+	c.LastCompletion = make([]string, 0)
+	c.NextIndex = 0
+}
+
+func (c *Completor) Next() (completion string) {
+	if len(c.LastCompletion) > 0 {
+		completion = c.LastCompletion[c.NextIndex]
+		c.NextIndex = (c.NextIndex + 1) % len(c.LastCompletion)
+	} else {
+		completion = ""
+	}
+	return completion
 }
