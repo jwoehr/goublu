@@ -21,20 +21,23 @@ type UbluManager struct {
 	Opts              *Options
 	Hist              *History
 	CommandLineEditor gocui.Editor
+	Completor         Completion
 }
 
 // Instances a new manager.
 func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um *UbluManager) {
 	um = &UbluManager{
-		U:    ublu,
-		G:    g,
-		Opts: opts,
-		Hist: hist,
+		U:         ublu,
+		G:         g,
+		Opts:      opts,
+		Hist:      hist,
+		Completor: NewCompletion(),
 	}
 	um.CommandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		gx, gy := um.G.Size()
 		cx, cy := v.Cursor()
 		text, _ := v.Line(cy)
+		text = strings.Trim(strings.TrimSpace(text), "\000")
 
 		// Shut up compiler
 		cy = cy
@@ -83,6 +86,13 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
+		case key == gocui.KeyCtrlSpace:
+			newtext := um.tryComplete(text)
+			v.Clear()
+			v.MoveCursor(0-cx, 0, false)
+			for _, ch := range newtext {
+				v.EditWrite(ch)
+			}
 		case key == gocui.KeyCtrlA || key == gocui.KeyHome:
 			v.MoveCursor(0-cx, 0, false)
 		case key == gocui.KeyCtrlB:
@@ -181,4 +191,17 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		return err
 	}
 	return nil
+}
+
+func (um *UbluManager) tryComplete(text string) (newtext string) {
+	newtext = text
+	if text != "" {
+		words := strings.Fields(text)
+		lastword := words[len(words)-1]
+		candidates := um.Completor.Complete(lastword)
+		if len(candidates) > 0 {
+			newtext = text[0:len(text)-len(lastword)] + candidates[0]
+		}
+	}
+	return newtext
 }
