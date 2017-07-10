@@ -37,6 +37,8 @@ func NewReqManager(um *UbluManager, g *gocui.Gui, x int, y int, title string, bg
 	rm.ReqEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		gx, gy := rm.G.Size()
 		cx, cy := v.Cursor()
+		_, y1, _, y2 := rm.calcPos(gx, gy)
+		pgHeight := y2 - y1
 
 		// Shut up compiler
 		gx = gx
@@ -55,10 +57,10 @@ func NewReqManager(um *UbluManager, g *gocui.Gui, x int, y int, title string, bg
 			v.MoveCursor(1, 0, false)
 		case key == gocui.KeyPgup:
 			ox, oy := v.Origin()
-			v.SetOrigin(ox, oy-20)
+			v.SetOrigin(ox, Max(0, oy-(pgHeight-1)))
 		case key == gocui.KeyPgdn:
 			ox, oy := v.Origin()
-			v.SetOrigin(ox, oy+20)
+			v.SetOrigin(ox, oy+(pgHeight-1))
 		/*
 			case key == gocui.MouseWheelUp:
 				v.MoveCursor(0, -1, false)
