@@ -8,14 +8,16 @@ import (
 
 // type Dashes []string
 
-// type Completor map[string] of Dash-Commands keyed by Ublu keywords
+// type Completor has map[string] of Dash-Commands keyed by Ublu keywords and an
+// array of the last set of candidate completions and the index of the last
+// one tried
 type Completor struct {
 	CMap           map[string][]string
 	LastCompletion []string
 	NextIndex      int
 }
 
-// Return the Completor map
+// Ctor the Completor
 func NewCompletor() (c *Completor) {
 	c = &Completor{
 		CMap:           make(map[string][]string),
@@ -149,16 +151,19 @@ func (c *Completor) Complete(partial string) (candidate string) {
 	return candidate
 }
 
+// Set new list of candidate completions, set index to 0
 func (c *Completor) Set(completion []string) {
 	c.LastCompletion = completion
 	c.NextIndex = 0
 }
 
+// Initialize candidate completions and index
 func (c *Completor) Clear() {
 	c.LastCompletion = make([]string, 0)
 	c.NextIndex = 0
 }
 
+// Return next candidate completions and bump index
 func (c *Completor) Next() (completion string) {
 	if len(c.LastCompletion) > 0 {
 		completion = c.LastCompletion[c.NextIndex]
