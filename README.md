@@ -69,7 +69,9 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
 		* Output announces the save file name
 		* You can do this as many times as you like during a session, a new file is created each time.
-		
+* Completion
+	* Ctrl-Space at the end of a partial command name rotates through completions, if any.
+
 ## Notes
 
 * The Ublu prompt appears on a line by itself in Goublu.
