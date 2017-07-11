@@ -25,6 +25,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	values are case-sensitive and are as follows: 
 		* `UbluDir`
 			* abs path to dir where ublu.jar resides, default `/opt/ublu`
+		* `JavaOpt`
+			* any option to the Java runtime, e.g, `JavaOpt=-Dsomething=other` (one option per JavaOpt line)
 		* `SaveOutDir`
 			* abs path to where pressing F4 saves the output text, default `/tmp`
 		* `PropsFile`
