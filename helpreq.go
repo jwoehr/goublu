@@ -13,6 +13,8 @@ const helpstring =
 	"	values are read and interpreted in order, are case-sensitive and are as follows: \n" +
 	"		* UbluDir\n" +
 	"			* abs path to dir where ublu.jar resides, default /opt/ublu\n" +
+	"		* JavaOpt\n"+
+	"			* any option to the Java runtime, e.g, JavaOpt=-Dsomething=other (one option per JavaOpt line)\n"+    
 	"		* SaveOutDir\n" +
 	"			* abs path to where pressing F4 saves the output text, default /tmp\n" +
 	"		* PropsFile\n" +

@@ -33,8 +33,17 @@ func NewUblu(args *Args, options *Options) (u *Ublu) {
 		return nil
 	}
 
-	myCmds := []string{"-jar", ubluFQP, "-g", "--"}
+	myCmds := make([]string, 0)
+	for o := range options.JavaOpts {
+		myCmds = append(myCmds, options.JavaOpts[o])
+	}
+	myCmds = append(myCmds, "-jar")
+	myCmds = append(myCmds, ubluFQP)
+	myCmds = append(myCmds, "-g")
+	myCmds = append(myCmds, "--")
+
 	ubluArgs := append(myCmds, args.Ubluargs[:]...)
+
 	cmd := exec.Command("java", ubluArgs...)
 
 	stdin, _ := cmd.StdinPipe()

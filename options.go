@@ -20,6 +20,7 @@ type Options struct {
 	FgColorIn  gocui.Attribute
 	BgColorOut gocui.Attribute
 	FgColorOut gocui.Attribute
+	JavaOpts   []string
 }
 
 // NewOptions is a ctor with default options.
@@ -31,6 +32,7 @@ func NewOptions() (opts *Options) {
 		FgColorIn:  gocui.ColorDefault,
 		BgColorOut: gocui.ColorDefault,
 		FgColorOut: gocui.ColorDefault,
+		JavaOpts:   make([]string, 0),
 	}
 	return opts
 }
@@ -90,6 +92,8 @@ func (o *Options) FromPropString(prop string) (err error) {
 				o.FgColorOut = ColorFromName(val)
 			case "PropsFile":
 				o.FromPropsFile(val)
+			case "JavaOpt":
+				o.JavaOpts = append(o.JavaOpts, val)
 			default:
 				err = errors.New("Unknown property")
 			}
