@@ -5,20 +5,19 @@ import (
 	"github.com/jwoehr/gocui"
 )
 
-const helpstring =
-    "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other:...] ublu_arg ublu_arg ...\n" +
+const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other:...] ublu_arg ublu_arg ...\n" +
 	"	* If the first argument to goublu is -g then the next element in the command line is assumed\n" +
 	"	to be a string of Goublu property-like options of the form Opt=Value, each option separated from\n" +
 	"	the next by : . All remaining commandline arguments are passed to Ublu. The Goublu options and their\n" +
 	"	values are read and interpreted in order, are case-sensitive and are as follows: \n" +
 	"		* UbluDir\n" +
 	"			* abs path to dir where ublu.jar resides, default /opt/ublu\n" +
-	"		* JavaOpt\n"+
-	"			* any option to the Java runtime, e.g, JavaOpt=-Dsomething=other (one option per JavaOpt line)\n"+    
+	"		* JavaOpt\n" +
+	"			* any option to the Java runtime, e.g, JavaOpt=-Dsomething=other (one option per JavaOpt line)\n" +
 	"		* SaveOutDir\n" +
 	"			* abs path to where pressing F4 saves the output text, default /tmp\n" +
 	"		* PropsFile\n" +
-	"			* abs path to a properties file containing these same option=value pairs\n"+
+	"			* abs path to a properties file containing these same option=value pairs\n" +
 	"		* BgColorIn\n" +
 	"			* Input background color, one of:\n" +
 	"				* ColorBlack\n" +
@@ -49,19 +48,20 @@ const helpstring =
 	"		* Left-arrow\n" +
 	"		* Right-arrow\n" +
 	"		* Insert\n" +
-	"		* Delete\n"+
-	"* History\n"+
-	"	* Up-arrow previous command\n"+
-	"	* Down-arrow next command\n"+
-	"	* PgUp first command\n"+
-	"	* PgDn last command\n"+
-	"	* F2 shows entire session's output\n"+
-	"	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n"+
-	"		* Output announces the save file name\n"+
-	"		* You can do this as many times as you like during a session, a new file is created each time.\n"+
-	"* Completion\n"+
+	"		* Delete\n" +
+	"* History\n" +
+	"	* Up-arrow previous command\n" +
+	"	* Down-arrow next command\n" +
+	"	* PgUp first command\n" +
+	"	* PgDn last command\n" +
+	"	* F2 shows entire session's output\n" +
+	"	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n" +
+	"		* Output announces the save file name\n" +
+	"		* You can do this as many times as you like during a session, a new file is created each time.\n" +
+	"* Completion\n" +
 	"	* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n"
 
+// Return a new help requester
 func NewHelpReq(um *UbluManager, g *gocui.Gui) *ReqManager {
 	return NewReqManager(um, g, 110, 42, " Goublu Help - F3 to exit ", gocui.ColorDefault, gocui.ColorDefault, helpstring)
 }
