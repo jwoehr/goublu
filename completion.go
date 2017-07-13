@@ -1,4 +1,4 @@
-// Completion does partial completion
+// Package goublu Completion does partial completion
 package goublu
 
 import (
@@ -8,7 +8,7 @@ import (
 
 // type Dashes []string
 
-// type Completor has map[string] of Dash-Commands keyed by Ublu keywords and an
+// Completor has map[string] of Dash-Commands keyed by Ublu keywords and an
 // array of the last set of candidate completions and the index of the last
 // one tried
 type Completor struct {
@@ -17,7 +17,7 @@ type Completor struct {
 	NextIndex      int
 }
 
-// Ctor the Completor
+// NewCompletor is Ctor/0 for the Completor
 func NewCompletor() (c *Completor) {
 	c = &Completor{
 		CMap:           make(map[string][]string),
@@ -127,11 +127,11 @@ func NewCompletor() (c *Completor) {
 	return c
 }
 
-// Zero or more completion candidates returned
+// Complete returns zero or more completion candidates.
 func (c *Completor) Complete(partial string) (candidate string) {
 	candidates := make([]string, 0)
 	// fmt.Printf("%d\n", len(c))
-	for key, _ := range c.CMap {
+	for key := range c.CMap {
 		// fmt.Printf("Partial is |%s|\n", partial)
 		// fmt.Printf("Key is %s\n", key)
 		if strings.HasPrefix(key, partial) {
@@ -157,13 +157,13 @@ func (c *Completor) Set(completion []string) {
 	c.NextIndex = 0
 }
 
-// Initialize candidate completions and index
+// Clear initializes candidate completions and index.
 func (c *Completor) Clear() {
 	c.LastCompletion = make([]string, 0)
 	c.NextIndex = 0
 }
 
-// Return next candidate completions and bump index
+// Next returns next candidate completion and bumps index.
 func (c *Completor) Next() (completion string) {
 	if len(c.LastCompletion) > 0 {
 		completion = c.LastCompletion[c.NextIndex]

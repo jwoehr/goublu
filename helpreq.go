@@ -1,4 +1,4 @@
-// HelpReq is the F1 Help requestor
+// Package goublu HelpReq is the F1 Help requestor.
 package goublu
 
 import (
@@ -61,7 +61,7 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"* Completion\n" +
 	"	* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n"
 
-// Return a new help requester
+// NewHelpReq returns a new help requester.
 func NewHelpReq(um *UbluManager, g *gocui.Gui) *ReqManager {
 	return NewReqManager(um, g, 110, 42, " Goublu Help - F3 to exit ", gocui.ColorDefault, gocui.ColorDefault, helpstring)
 }

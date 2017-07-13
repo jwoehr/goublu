@@ -1,13 +1,13 @@
-// Args manages the os-passed-in args between goublu itself and Ublu.
+// Package goublu Args manages the os-passed-in args between goublu itself and Ublu.
 package goublu
 
-// Holds the split of the os arguments between goublu args and Ublu args.
+// Args holds the split of the os arguments between goublu args and Ublu args.
 type Args struct {
 	Goubluargs string
 	Ubluargs   []string
 }
 
-// Instances a Args from the os args.
+// NewArgs instances a Args from the os args.
 func NewArgs(osargs []string) (args *Args) {
 	args = &Args{
 		Goubluargs: args.getGoubluArgs(osargs),

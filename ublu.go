@@ -1,4 +1,4 @@
-// Ublu is the struct managing execution of the Java program Ublu.
+// Package goublu Ublu is the struct managing execution of the Java program Ublu.
 package goublu
 
 import (
@@ -22,7 +22,7 @@ type Ublu struct {
 	OutReader *bufio.Reader
 }
 
-// Returns an initialized *Ublu ready to run.
+// NewUblu returns an initialized *Ublu ready to run.
 func NewUblu(args *Args, options *Options) (u *Ublu) {
 
 	ubluFQP := filepath.Join(options.UbluDir, "ublu.jar")
@@ -66,12 +66,12 @@ func NewUblu(args *Args, options *Options) (u *Ublu) {
 	return u
 }
 
-// Runs the Ublu instance.
+// Run runs the Ublu instance.
 func (u *Ublu) Run() {
 	u.Cmd.Run()
 }
 
-// Does cleanup.
+// Close does cleanup.
 func (u *Ublu) Close() {
 	u.Stdout.Close()
 	u.Stderr.Close()

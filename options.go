@@ -1,15 +1,15 @@
-// Options parses and stores user options for Goublu.
+// Package goublu Options parses and stores user options for Goublu.
 package goublu
 
 import (
 	"bufio"
 	"errors"
-	/* debug */ // "fmt"
-	"github.com/jwoehr/gocui"
 	"os"
 	"reflect"
 	"regexp"
 	"strings"
+
+	"github.com/jwoehr/gocui"
 )
 
 // Options holds user options.
@@ -37,14 +37,14 @@ func NewOptions() (opts *Options) {
 	return opts
 }
 
-// Parses and sets options from a property file.
+// FromPropsFile parses and sets options from a property file.
 func (o *Options) FromPropsFile(fname string) (err error) {
 	f, err := os.Open(fname)
 	if err == nil {
 		propreader := bufio.NewReader(f)
-
+		var prop string
 		for {
-			prop, err := propreader.ReadString('\n')
+			prop, err = propreader.ReadString('\n')
 			if err != nil {
 				break
 			}
@@ -54,7 +54,10 @@ func (o *Options) FromPropsFile(fname string) (err error) {
 	return err
 }
 
-// Parses and sets options from prop=val pairs separated by ':' .
+// FromPropStrings parses and sets options from prop=val pairs separated by ':' .
+// Note that prop string values in a props file can contain embedded : colons
+// but prop string values on the command line may not because that's the prop
+// seperator.
 func (o *Options) FromPropStrings(props string) (err error) {
 	err = nil
 	rx := regexp.MustCompile(":")
@@ -68,7 +71,10 @@ func (o *Options) FromPropStrings(props string) (err error) {
 	return err
 }
 
-// Parses and sets an option from a single prop=val pair.
+// FromPropString parses and sets an option from a single prop=val pair.
+// Note that prop string values in a props file can contain embedded : colons
+// but prop string values on the command line may not because that's the prop
+// seperator.
 func (o *Options) FromPropString(prop string) (err error) {
 	err = nil
 	if !strings.HasPrefix(prop, "#") {
@@ -104,7 +110,7 @@ func (o *Options) FromPropString(prop string) (err error) {
 	return err
 }
 
-// Returns the named gocui color Attribute.
+// ColorFromName returns the named gocui color Attribute.
 func ColorFromName(name string) (color gocui.Attribute) {
 	switch name {
 	case "ColorBlack":

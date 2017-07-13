@@ -1,13 +1,14 @@
-// ReqManager is the gocui manager for requestors.
+// Package goublu ReqManager is the gocui manager for requestors.
 package goublu
 
 import (
 	"fmt"
-	"github.com/jwoehr/gocui"
 	"strings"
+
+	"github.com/jwoehr/gocui"
 )
 
-// A gocui manager for Requestors.
+// ReqManager is a gocui Manager for Requestors.
 type ReqManager struct {
 	UM         *UbluManager
 	G          *gocui.Gui
@@ -22,7 +23,7 @@ type ReqManager struct {
 	UbluoutBuf string
 }
 
-// Instances a new manager.
+// NewReqManager instances a new manager.
 func NewReqManager(um *UbluManager, g *gocui.Gui, x int, y int, title string, bgc gocui.Attribute, fgc gocui.Attribute, text string) (rm *ReqManager) {
 	rm = &ReqManager{
 		UM:      um,
@@ -36,15 +37,8 @@ func NewReqManager(um *UbluManager, g *gocui.Gui, x int, y int, title string, bg
 	}
 	rm.ReqEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		gx, gy := rm.G.Size()
-		cx, cy := v.Cursor()
 		_, y1, _, y2 := rm.calcPos(gx, gy)
 		pgHeight := y2 - y1
-
-		// Shut up compiler
-		gx = gx
-		gy = gy
-		cx = cx
-		cy = cy
 
 		switch {
 		case key == gocui.KeyArrowDown:
@@ -83,7 +77,7 @@ func (rm *ReqManager) calcPos(maxX int, maxY int) (x1 int, y1 int, x2 int, y2 in
 	return x1, y1, x2, y2
 }
 
-// Unshows the requestor.
+// EndReq unshows the requestor.
 func (rm *ReqManager) EndReq() {
 	rm.G.SetManager(rm.UM)
 	rm.UM.Layout(rm.G)
@@ -96,7 +90,7 @@ func (rm *ReqManager) EndReq() {
 	fmt.Fprintf(v, "%s\n", strings.Trim(strings.TrimSpace(rm.UbluoutBuf), "\000"))
 }
 
-// Shows the requestor.
+// StartReq shows the requestor.
 func (rm *ReqManager) StartReq() {
 	v, _ := rm.G.View("Ubluin")
 	rm.UbluinBuf = v.Buffer()
@@ -105,7 +99,7 @@ func (rm *ReqManager) StartReq() {
 	rm.G.SetManager(rm.UM, rm)
 }
 
-// Obligatory layout redraw function
+// Layout is the obligatory gocui layout redraw function.
 func (rm *ReqManager) Layout(g *gocui.Gui) error {
 	x1, y1, x2, y2 := rm.calcPos(g.Size())
 	if v, err := g.SetView(rm.Title, x1, y1, x2, y2); err != nil {

@@ -1,14 +1,14 @@
-// History provides command line history in the goublu Ublu input area.
+// Package goublu History provides command line history in the goublu Ublu input area.
 package goublu
 
-// Keeps history lines from the goublu input line and output from the console out.
+// History keeps history lines from the goublu input line and output from the console out.
 type History struct {
 	commandLines   []string
 	commandPointer int
 	AllOut         string
 }
 
-// Ctor
+// NewHistory is Ctor/0.
 func NewHistory() *History {
 	h := &History{}
 	h.commandLines = make([]string, 0, 0)
@@ -16,13 +16,13 @@ func NewHistory() *History {
 	return h
 }
 
-// Postpends a history line
+// Append postpends a history line to the collection.
 func (h *History) Append(l string) {
 	h.commandLines = append(h.commandLines, l)
 	h.commandPointer = len(h.commandLines) - 1
 }
 
-// Returns the next backwards history line, decrementing the pointer for
+// Back returns the next backwards history line, decrementing the pointer for
 // next history line request. The pointer is floored and does not wrap.
 func (h *History) Back() string {
 	var result string
@@ -35,7 +35,7 @@ func (h *History) Back() string {
 	return result
 }
 
-// Returns the next forwards history line, incrementing the pointer for
+// Forward returns the next forwards history line, incrementing the pointer for
 // next history line request. The pointer is roofed and does not wrap.
 func (h *History) Forward() string {
 	var result string
@@ -56,7 +56,7 @@ func (h *History) Forward() string {
 	return result
 }
 
-// Returns the first history line if any, resetting the pointer if any.
+// First returns the first history line if any, resetting the pointer if any.
 func (h *History) First() string {
 	var result string
 	if len(h.commandLines) > 0 {
@@ -66,7 +66,7 @@ func (h *History) First() string {
 	return result
 }
 
-// Returns the last history line if any, resetting the pointer if any.
+// Last returns the last history line if any, resetting the pointer if any.
 func (h *History) Last() string {
 	var result string
 	if len(h.commandLines) > 0 {
@@ -76,12 +76,12 @@ func (h *History) Last() string {
 	return result
 }
 
-// Adds more output text to the complete console out text.
+// AppendAllOut adds more output text to the complete console out text.
 func (h *History) AppendAllOut(text string) {
 	h.AllOut = h.AllOut + text
 }
 
-// Returns the max of two ints.
+// Max returns the max of two ints.
 func Max(x, y int) int {
 	if x > y {
 		return x
@@ -89,7 +89,7 @@ func Max(x, y int) int {
 	return y
 }
 
-// Returns the min of two ints.
+// Min returns the min of two ints.
 func Min(x, y int) int {
 	if x < y {
 		return x

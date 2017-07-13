@@ -1,20 +1,21 @@
-// UbluManager is the gocui manager for Ublu input and output.
+// Package goublu UbluManager is the gocui manager for Ublu input and output.
 package goublu
 
 import (
 	"fmt"
-	"github.com/jwoehr/gocui"
-	"github.com/jwoehr/termbox-go"
 	"io"
 	"io/ioutil"
 	"log"
 	"strings"
+
+	"github.com/jwoehr/gocui"
+	"github.com/jwoehr/termbox-go"
 )
 
 // How far from bottom we reserve our input area
 const inputLineOffset = 3
 
-// A gocui manager for Ublu io.
+// UbluManager is a gocui Manager for Ublu io.
 type UbluManager struct {
 	U                 *Ublu
 	G                 *gocui.Gui
@@ -24,7 +25,7 @@ type UbluManager struct {
 	Completor         *Completor
 }
 
-// Instances a new manager.
+// NewUbluManager instances a new manager.
 func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um *UbluManager) {
 	um = &UbluManager{
 		U:         ublu,
@@ -34,15 +35,9 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		Completor: NewCompletor(),
 	}
 	um.CommandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
-		gx, gy := um.G.Size()
 		cx, cy := v.Cursor()
 		text, _ := v.Line(cy)
 		text = strings.Trim(strings.TrimSpace(text), "\000")
-
-		// Shut up compiler
-		cy = cy
-		gx = gx
-		gy = gy
 
 		switch {
 		case ch != 0 && mod == 0:
@@ -135,7 +130,7 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 	return um
 }
 
-// Pipes input to Ublu
+// Ubluin pipes input to Ublu.
 func (um *UbluManager) Ubluin(g *gocui.Gui, v *gocui.View) {
 	var l string
 	var err error
@@ -154,7 +149,7 @@ func (um *UbluManager) Ubluin(g *gocui.Gui, v *gocui.View) {
 	v.MoveCursor(0-cx, (gy-inputLineOffset)-cy, false)
 }
 
-// Writes to console output from Ublu
+// Ubluout writes to console output from Ublu.
 func (um *UbluManager) Ubluout(g *gocui.Gui, text string) {
 	v, err := g.View("Ubluout")
 	if err != nil {
@@ -165,7 +160,7 @@ func (um *UbluManager) Ubluout(g *gocui.Gui, text string) {
 	termbox.Interrupt()
 }
 
-// Obligatory layout redraw function
+// Layout is the obligatory gocui layout redraw function
 func (um *UbluManager) Layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()
 	if v, err := g.SetView("Ubluout", 0, 0, maxX-1, maxY-inputLineOffset); err != nil {
