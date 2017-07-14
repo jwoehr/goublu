@@ -115,6 +115,12 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			um.Ubluout(um.G, "Saving output to "+f.Name()+"\n")
 			f.Write([]byte(um.Hist.AllOut))
 			f.Close()
+		case key == gocui.KeyF9:
+			v.Clear()
+			v.MoveCursor(0-cx, 0, false)
+			for _, ch := range um.Hist.BackWrap() {
+				v.EditWrite(ch)
+			}
 		case key == gocui.MouseLeft:
 		case key == gocui.MouseMiddle:
 		case key == gocui.MouseRight:
@@ -167,7 +173,7 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = " Ublu Output  [F1 Goublu Help] [F2 Review Output] [F4 Save Output] "
+		v.Title = " Ublu Output  [F1 Goublu Help] [F2 Review Out] [F4 Save Out] [F9 Prev Cmd] "
 		v.Autoscroll = true
 		v.Wrap = true
 		v.BgColor = um.Opts.BgColorOut

@@ -35,6 +35,25 @@ func (h *History) Back() string {
 	return result
 }
 
+// BackWrap returns the next backwards history line, decrementing the pointer for
+// next history line request. The pointer wraps.
+func (h *History) BackWrap() string {
+	var result string
+	if len(h.commandLines) > 0 {
+		if h.commandPointer > -1 {
+			result = h.commandLines[h.commandPointer]
+			h.commandPointer = (h.commandPointer - 1) % len(h.commandLines)
+		} else {
+			h.commandPointer = len(h.commandLines) - 1 // so we can't over-decrement
+			if h.commandPointer > 0 {
+				result = h.commandLines[h.commandPointer]
+			}
+			h.commandPointer = (h.commandPointer - 1) % len(h.commandLines)
+		}
+	}
+	return result
+}
+
 // Forward returns the next forwards history line, incrementing the pointer for
 // next history line request. The pointer is roofed and does not wrap.
 func (h *History) Forward() string {

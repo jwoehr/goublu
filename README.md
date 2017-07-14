@@ -10,7 +10,7 @@ Goublu is new and works with some limitations.
 	* Mac OS X
 * Works poorly on
 	* Windows
-	
+
 
 Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
 
@@ -22,7 +22,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* If the first argument to goublu is `-g` then the next element in the command line is assumed
 	to be a string of Goublu property-like options of the form Opt=Value, each option separated from
 	the next by `:` . All remaining commandline arguments are passed to Ublu. The Goublu options and their
-	values are case-sensitive and are as follows: 
+	values are case-sensitive and are as follows:
 		* `UbluDir`
 			* abs path to dir where ublu.jar resides, default `/opt/ublu`
 		* `JavaOpt`
@@ -71,6 +71,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
 		* Output announces the save file name
 		* You can do this as many times as you like during a session, a new file is created each time.
+	* F9 rotates through previous commands wrapping.
 * Completion
 	* Ctrl-Space at the end of a partial command name rotates through completions, if any.
 
