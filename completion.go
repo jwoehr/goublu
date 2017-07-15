@@ -21,9 +21,7 @@ type Completor struct {
 // NewCompletor is Ctor/0 for the Completor
 func NewCompletor() (c *Completor) {
 	c = &Completor{
-		CMap: make(map[string][]string),
-		// LastCompletion: make([]string, 0),
-		// NextIndex:      0,
+		CMap:  make(map[string][]string),
 		Valid: false,
 	}
 	c.CMap["as400"] = []string{"-to", "--"}
