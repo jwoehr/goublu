@@ -129,7 +129,7 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		case key == gocui.MouseWheelDown:
 		}
 		if key != gocui.KeyCtrlSpace {
-			um.Completor.Clear()
+			um.Completor.Valid = false
 		}
 	})
 
@@ -199,6 +199,9 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 
 func (um *UbluManager) tryComplete(text string) (newtext string) {
 	newtext = text
+	if um.Completor.Valid == false {
+		um.Completor.Clear()
+	}
 	if text != "" {
 		words := strings.Fields(text)
 		lastword := words[len(words)-1]
@@ -207,7 +210,7 @@ func (um *UbluManager) tryComplete(text string) (newtext string) {
 			candidate = um.Completor.Complete(lastword)
 		}
 		if candidate != "" {
-			newtext = text[0:len(text)-len(lastword)] + candidate
+			newtext = text[0:strings.LastIndex(text, lastword)] + candidate
 		}
 	}
 	return newtext

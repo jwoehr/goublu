@@ -15,14 +15,16 @@ type Completor struct {
 	CMap           map[string][]string
 	LastCompletion []string
 	NextIndex      int
+	Valid          bool
 }
 
 // NewCompletor is Ctor/0 for the Completor
 func NewCompletor() (c *Completor) {
 	c = &Completor{
-		CMap:           make(map[string][]string),
-		LastCompletion: make([]string, 0),
-		NextIndex:      0,
+		CMap: make(map[string][]string),
+		// LastCompletion: make([]string, 0),
+		// NextIndex:      0,
+		Valid: false,
 	}
 	c.CMap["as400"] = []string{"-to", "--"}
 	c.CMap["ask"] = []string{}
@@ -161,6 +163,7 @@ func (c *Completor) Set(completion []string) {
 func (c *Completor) Clear() {
 	c.LastCompletion = make([]string, 0)
 	c.NextIndex = 0
+	c.Valid = true
 }
 
 // Next returns next candidate completion and bumps index.
