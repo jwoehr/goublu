@@ -35,6 +35,8 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"			* Output background color, as above\n" +
 	"		* FgColorOut\n" +
 	"			* Output foreground color, as above\n" +
+	"		* Macro=name freeform string of Ublu commands\n" +
+	"			* Sets macro 'name' to 'freeform string of Ublu commands'\n" +
 	"* Assumes in absence of property set as above that Ublu is found in /opt/ublu/ublu.jar\n" +
 	"* Basic line editing\n" +
 	"	* Ctl-a move to head of line\n" +
@@ -59,9 +61,11 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n" +
 	"		* Output announces the save file name\n" +
 	"		* You can do this as many times as you like during a session, a new file is created each time.\n" +
+	"	* F5 expands a macro you set in the properties file.\n" +
 	"	* F9 rotates through previous commands wrapping.\n" +
 	"* Completion\n" +
-	"	* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n"
+	"	* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n" +
+	"* F1 shows Goublu help.\n"
 
 // NewHelpReq returns a new help requester.
 func NewHelpReq(um *UbluManager, g *gocui.Gui) *ReqManager {

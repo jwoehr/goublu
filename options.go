@@ -21,6 +21,7 @@ type Options struct {
 	BgColorOut gocui.Attribute
 	FgColorOut gocui.Attribute
 	JavaOpts   []string
+	Macros     *MacroExpander
 }
 
 // NewOptions is a ctor with default options.
@@ -33,6 +34,7 @@ func NewOptions() (opts *Options) {
 		BgColorOut: gocui.ColorDefault,
 		FgColorOut: gocui.ColorDefault,
 		JavaOpts:   make([]string, 0),
+		Macros:     NewMacroExpander(),
 	}
 	return opts
 }
@@ -100,6 +102,8 @@ func (o *Options) FromPropString(prop string) (err error) {
 				o.FromPropsFile(val)
 			case "JavaOpt":
 				o.JavaOpts = append(o.JavaOpts, val)
+			case "Macro":
+				o.Macros.AddFromProperty(val)
 			default:
 				err = errors.New("Unknown property")
 			}

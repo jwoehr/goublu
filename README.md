@@ -48,6 +48,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 			* Output background color, as above
 		* `FgColorOut`
 			* Output foreground color, as above			
+			* `Macro=name freeform string of Ublu commands`
+				* Sets macro `name` to `freeform string of Ublu commands`
 * Assumes in absence of property set as above that Ublu is found in `/opt/ublu/ublu.jar`
 * Basic line editing
 	* Ctl-a move to head of line
@@ -71,9 +73,11 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
 		* Output announces the save file name
 		* You can do this as many times as you like during a session, a new file is created each time.
+	* F5 expands a macro you set in the properties file.
 	* F9 rotates through previous commands wrapping.
 * Completion
 	* Ctrl-Space at the end of a partial command name rotates through completions, if any.
+* F1 shows Goublu help.
 
 ## Notes
 

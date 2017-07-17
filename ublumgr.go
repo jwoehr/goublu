@@ -54,40 +54,45 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			um.Ubluin(um.G, v)
 			termbox.Interrupt() // for good luck
 		case key == gocui.KeyArrowDown:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range um.Hist.Forward() {
-				v.EditWrite(ch)
-			}
+			replaceLine(v, cx, um.Hist.Forward())
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range um.Hist.Forward() {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.KeyArrowUp:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range um.Hist.Back() {
-				v.EditWrite(ch)
-			}
+			replaceLine(v, cx, um.Hist.Back())
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range um.Hist.Back() {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.KeyPgup:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range um.Hist.First() {
-				v.EditWrite(ch)
-			}
+			replaceLine(v, cx, um.Hist.First())
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range um.Hist.First() {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.KeyPgdn:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range um.Hist.Last() {
-				v.EditWrite(ch)
-			}
+			replaceLine(v, cx, um.Hist.Last())
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range um.Hist.Last() {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.KeyArrowLeft:
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
 		case key == gocui.KeyCtrlSpace:
-			newtext := um.tryComplete(text)
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range newtext {
-				v.EditWrite(ch)
-			}
+			replaceLine(v, cx, um.tryComplete(text))
+			// newtext := um.tryComplete(text)
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range newtext {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.KeyCtrlA || key == gocui.KeyHome:
 			v.MoveCursor(0-cx, 0, false)
 		case key == gocui.KeyCtrlB:
@@ -115,12 +120,21 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			um.Ubluout(um.G, "Saving output to "+f.Name()+"\n")
 			f.Write([]byte(um.Hist.AllOut))
 			f.Close()
+		case key == gocui.KeyF5:
+			replaceLine(v, cx, um.tryExpand(text))
+			// newtext := um.tryExpand(text)
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range newtext {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.KeyF9:
-			v.Clear()
-			v.MoveCursor(0-cx, 0, false)
-			for _, ch := range um.Hist.BackWrap() {
-				v.EditWrite(ch)
-			}
+			replaceLine(v, cx, um.Hist.BackWrap())
+			// v.Clear()
+			// v.MoveCursor(0-cx, 0, false)
+			// for _, ch := range um.Hist.BackWrap() {
+			// 	v.EditWrite(ch)
+			// }
 		case key == gocui.MouseLeft:
 		case key == gocui.MouseMiddle:
 		case key == gocui.MouseRight:
@@ -173,7 +187,7 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = " Ublu Output  [F1 Goublu Help] [F2 Review Out] [F4 Save Out] [F9 Prev Cmd] "
+		v.Title = " Ublu Output  [F1 Goublu Help] [F2 Review Out] [F4 Save Out] [F5 Macro] [F9 Prev Cmd] "
 		v.Autoscroll = true
 		v.Wrap = true
 		v.BgColor = um.Opts.BgColorOut
@@ -214,4 +228,25 @@ func (um *UbluManager) tryComplete(text string) (newtext string) {
 		}
 	}
 	return newtext
+}
+
+func (um *UbluManager) tryExpand(text string) (newtext string) {
+	newtext = text
+	if text != "" {
+		words := strings.Fields(text)
+		lastword := words[len(words)-1]
+		candidate := um.Opts.Macros.Expand(lastword)
+		if candidate != "" {
+			newtext = text[0:strings.LastIndex(text, lastword)] + candidate
+		}
+	}
+	return newtext
+}
+
+func replaceLine(v *gocui.View, cx int, newtext string) {
+	v.Clear()
+	v.MoveCursor(0-cx, 0, false)
+	for _, ch := range newtext {
+		v.EditWrite(ch)
+	}
 }
