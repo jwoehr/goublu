@@ -55,44 +55,18 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			termbox.Interrupt() // for good luck
 		case key == gocui.KeyArrowDown:
 			replaceLine(v, cx, um.Hist.Forward())
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range um.Hist.Forward() {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.KeyArrowUp:
 			replaceLine(v, cx, um.Hist.Back())
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range um.Hist.Back() {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.KeyPgup:
 			replaceLine(v, cx, um.Hist.First())
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range um.Hist.First() {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.KeyPgdn:
 			replaceLine(v, cx, um.Hist.Last())
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range um.Hist.Last() {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.KeyArrowLeft:
 			v.MoveCursor(-1, 0, false)
 		case key == gocui.KeyArrowRight:
 			v.MoveCursor(1, 0, false)
 		case key == gocui.KeyCtrlSpace:
 			replaceLine(v, cx, um.tryComplete(text))
-			// newtext := um.tryComplete(text)
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range newtext {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.KeyCtrlA || key == gocui.KeyHome:
 			v.MoveCursor(0-cx, 0, false)
 		case key == gocui.KeyCtrlB:
@@ -122,19 +96,8 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			f.Close()
 		case key == gocui.KeyF5:
 			replaceLine(v, cx, um.tryExpand(text))
-			// newtext := um.tryExpand(text)
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range newtext {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.KeyF9:
 			replaceLine(v, cx, um.Hist.BackWrap())
-			// v.Clear()
-			// v.MoveCursor(0-cx, 0, false)
-			// for _, ch := range um.Hist.BackWrap() {
-			// 	v.EditWrite(ch)
-			// }
 		case key == gocui.MouseLeft:
 		case key == gocui.MouseMiddle:
 		case key == gocui.MouseRight:
