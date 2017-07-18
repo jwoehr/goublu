@@ -76,3 +76,9 @@ func (u *Ublu) Close() {
 	u.Stdout.Close()
 	u.Stderr.Close()
 }
+
+// QuickExit closes the pipes and exits with the given return code
+func (u *Ublu) QuickExit(code int) {
+	u.Close()
+	os.Exit(code)
+}

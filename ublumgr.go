@@ -23,6 +23,7 @@ type UbluManager struct {
 	Hist              *History
 	CommandLineEditor gocui.Editor
 	Completor         *Completor
+	ExitChan          chan string
 }
 
 // NewUbluManager instances a new manager.
@@ -33,6 +34,7 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		Opts:      opts,
 		Hist:      hist,
 		Completor: NewCompletor(),
+		ExitChan:  make(chan string),
 	}
 	um.CommandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		cx, cy := v.Cursor()
@@ -86,6 +88,8 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		case key == gocui.KeyF2:
 			rm := NewAllOutReq(um, um.G)
 			rm.StartReq()
+		case key == gocui.KeyF3:
+			um.doExitDialog(g, 9, 3)
 		case key == gocui.KeyF4:
 			f, err := ioutil.TempFile(um.Opts.SaveOutDir, "goublu.out.")
 			if err != nil {
@@ -109,7 +113,17 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			um.Completor.Valid = false
 		}
 	})
-
+	go func() {
+		var exitMsg string
+		for {
+			exitMsg = <-um.ExitChan
+			if exitMsg == "YES" {
+				um.G.Close()
+				fmt.Printf("Ublu exiting quickly on F3.\n")
+				um.U.QuickExit(3)
+			}
+		}
+	}()
 	return um
 }
 
@@ -150,7 +164,7 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = " Ublu Output  [F1 Goublu Help] [F2 Review Out] [F4 Save Out] [F5 Macro] [F9 Prev Cmd] "
+		v.Title = " Ublu Output  [F1 Help] [F2 Review] [F3 Quit] [F4 Save] [F5 Macro] [F9 Prev] "
 		v.Autoscroll = true
 		v.Wrap = true
 		v.BgColor = um.Opts.BgColorOut
@@ -212,4 +226,8 @@ func replaceLine(v *gocui.View, cx int, newtext string) {
 	for _, ch := range newtext {
 		v.EditWrite(ch)
 	}
+}
+
+func (um *UbluManager) doExitDialog(g *gocui.Gui, x int, y int) {
+	NewTextLineDialog(um, g, x, y, "Exit", gocui.ColorRed, gocui.ColorBlack, "NO\nYES").StartDialog(um.ExitChan)
 }
