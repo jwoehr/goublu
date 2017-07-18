@@ -1,16 +1,14 @@
 # goublu
 Goublu is a [Go language](http://golang.org) front end that provides a better console interface to [Ublu](https://github.com/jwoehr/ublu) than the console support provided by Java.
 
-![goublu_screenshot](https://user-images.githubusercontent.com/4604036/28322059-40b73d3e-6b92-11e7-8c59-4bd2e506dc58.png)
+![goublu_screenshot](https://user-images.githubusercontent.com/4604036/28322382-317d05fa-6b93-11e7-8457-b07eec2873af.png)
 
-Goublu is new and works with some limitations.
 * Works on
 	* OpenBSD
 	* Linux
 	* Mac OS X
 * Works poorly on
 	* Windows
-
 
 Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
 
@@ -95,4 +93,4 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Command lines longer that the view width of the input line behave erratically in response to edit commands.
 	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
-Jack Woehr 2017-06-26
+Jack Woehr 2017-07-18
