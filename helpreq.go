@@ -58,6 +58,7 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"	* PgDn last command\n" +
 	"	* F1 shows Goublu help\n" +
 	"	* F2 shows entire session's output\n" +
+	" * F3 offers a quick exit for when Ublu gets caught in a loop or network timeout\n" +
 	"	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n" +
 	"		* Output announces the save file name\n" +
 	"		* You can do this as many times as you like during a session, a new file is created each time.\n" +

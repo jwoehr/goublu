@@ -1,7 +1,7 @@
 # goublu
 Goublu is a [Go language](http://golang.org) front end that provides a better console interface to [Ublu](https://github.com/jwoehr/ublu) than the console support provided by Java.
 
-![goublu_screenshot](https://user-images.githubusercontent.com/4604036/28280906-8d3775a8-6ae2-11e7-85f1-5f2c617a0a66.png)
+![goublu_screenshot](https://user-images.githubusercontent.com/4604036/28322059-40b73d3e-6b92-11e7-8c59-4bd2e506dc58.png)
 
 Goublu is new and works with some limitations.
 * Works on
@@ -70,6 +70,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* PgUp first command
 	* PgDn last command
 	* F2 shows entire session's output
+	* F3 offers a quick exit for when Ublu gets caught in a loop or network timeout
 	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
 		* Output announces the save file name
 		* You can do this as many times as you like during a session, a new file is created each time.

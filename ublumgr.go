@@ -24,6 +24,7 @@ type UbluManager struct {
 	CommandLineEditor gocui.Editor
 	Completor         *Completor
 	ExitChan          chan string
+	Dialoging         bool
 }
 
 // NewUbluManager instances a new manager.
@@ -35,6 +36,7 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		Hist:      hist,
 		Completor: NewCompletor(),
 		ExitChan:  make(chan string),
+		Dialoging: false,
 	}
 	um.CommandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
 		cx, cy := v.Cursor()
@@ -164,7 +166,7 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		if err != gocui.ErrUnknownView {
 			return err
 		}
-		v.Title = " Ublu Output  [F1 Help] [F2 Review] [F3 Quit] [F4 Save] [F5 Macro] [F9 Prev] "
+		v.Title = " Ublu Output  [F1 Help] [F2 Review] [F3 Quit?] [F4 Save] [F5 Macro] [F9 Prev] "
 		v.Autoscroll = true
 		v.Wrap = true
 		v.BgColor = um.Opts.BgColorOut
@@ -182,8 +184,10 @@ func (um *UbluManager) Layout(g *gocui.Gui) error {
 		v.BgColor = um.Opts.BgColorIn
 		v.FgColor = um.Opts.FgColorIn
 	}
-	if _, err := g.SetCurrentView("Ubluin"); err != nil {
-		return err
+	if !um.Dialoging {
+		if _, err := g.SetCurrentView("Ubluin"); err != nil {
+			return err
+		}
 	}
 	return nil
 }

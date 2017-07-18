@@ -67,7 +67,8 @@ func (tld *TextLineDialog) Layout(g *gocui.Gui) error {
 // StartDialog shows the dialog.
 func (tld *TextLineDialog) StartDialog(exitChan chan string) error {
 	tld.ResultChan = exitChan
-	tld.G.SetManager(tld)
+	tld.G.SetManager(tld.UM, tld)
+	tld.UM.Dialoging = true
 	if err := tld.G.SetKeybinding(tld.Title, gocui.KeyEnter, gocui.ModNone, tld.EndDialog); err != nil {
 		return err
 	}
@@ -112,6 +113,7 @@ func (tld *TextLineDialog) EndDialog(g *gocui.Gui, v *gocui.View) error {
 	text, _ := v.Line(cy)
 	tld.Result = strings.Trim(strings.TrimSpace(text), "\000")
 	g.SetManager(tld.UM)
+	tld.UM.Dialoging = false
 	tld.UM.Layout(g)
 	tld.ResultChan <- tld.Result
 	return nil
