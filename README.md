@@ -67,16 +67,17 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Down-arrow next command
 	* PgUp first command
 	* PgDn last command
-	* F2 shows entire session's output
-	* F3 offers a quick exit for when Ublu gets caught in a loop or network timeout
-	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._
-		* Output announces the save file name
-		* You can do this as many times as you like during a session, a new file is created each time.
-	* F5 expands a macro you set in the properties file.
-	* F9 rotates through previous commands wrapping.
-* Completion
-	* Ctrl-Space at the end of a partial command name rotates through completions, if any.
 * F1 shows Goublu help.
+* F2 shows entire session's output
+* F3 offers a quick exit for when Ublu gets caught in a loop or network timeout
+* F4 saves the entire session's output to a file `SaveOutDir/goublu.out.`_xxx..._
+	* SaveOutDir set above as Goublu property, default is /tmp
+	* Output announces the save file name
+	* You can do this as many times as you like during a session, a new file is created each time.
+* F5 expands a macro you set in the properties file.
+* F9 rotates through previous commands wrapping.
+* Ctrl-Space at the end of a partial command name rotates through completions, if any.
+
 
 ## Notes
 

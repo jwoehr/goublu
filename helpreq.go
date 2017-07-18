@@ -7,9 +7,9 @@ import (
 
 const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other:...] ublu_arg ublu_arg ...\n" +
 	"	* If the first argument to goublu is -g then the next element in the command line is assumed\n" +
-	"	to be a string of Goublu property-like options of the form Opt=Value, each option separated from\n" +
-	"	the next by : . All remaining commandline arguments are passed to Ublu. The Goublu options and their\n" +
-	"	values are read and interpreted in order, are case-sensitive and are as follows: \n" +
+	"	  to be a string of Goublu property-like options of the form Opt=Value, each option separated from\n" +
+	"	  the next by : . All remaining commandline arguments are passed to Ublu. The Goublu options and their\n" +
+	"	  values are read and interpreted in order, are case-sensitive and are as follows: \n" +
 	"		* UbluDir\n" +
 	"			* abs path to dir where ublu.jar resides, default /opt/ublu\n" +
 	"		* JavaOpt\n" +
@@ -56,17 +56,16 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"	* Down-arrow next command\n" +
 	"	* PgUp first command\n" +
 	"	* PgDn last command\n" +
-	"	* F1 shows Goublu help\n" +
-	"	* F2 shows entire session's output\n" +
-	" * F3 offers a quick exit for when Ublu gets caught in a loop or network timeout\n" +
-	"	* F4 saves the entire session's output to a file `/tmp/goublu.out.`_xxx..._\n" +
-	"		* Output announces the save file name\n" +
-	"		* You can do this as many times as you like during a session, a new file is created each time.\n" +
-	"	* F5 expands a macro you set in the properties file.\n" +
-	"	* F9 rotates through previous commands wrapping.\n" +
-	"* Completion\n" +
-	"	* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n" +
-	"* F1 shows Goublu help.\n"
+	"* F1 shows Goublu help\n" +
+	"* F2 shows entire session's output\n" +
+	"* F3 offers a quick exit for when Ublu gets caught in a loop or network timeout\n" +
+	"* F4 saves the entire session's output to a file `SaveOutDir/goublu.out.`_xxx..._\n" +
+	"	* SaveOutDir set above as Goublu property, default is /tmp" +
+	"	* Output announces the save file name\n" +
+	"	* You can do this as many times as you like during a session, a new file is created each time.\n" +
+	"* F5 expands a macro you set in the properties file.\n" +
+	"* F9 rotates through previous commands wrapping.\n" +
+	"* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n"
 
 // NewHelpReq returns a new help requester.
 func NewHelpReq(um *UbluManager, g *gocui.Gui) *ReqManager {
