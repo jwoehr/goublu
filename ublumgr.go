@@ -121,7 +121,7 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			exitMsg = <-um.ExitChan
 			if exitMsg == "YES" {
 				um.G.Close()
-				fmt.Printf("Ublu exiting quickly on F3.\n")
+				fmt.Printf("Ublu exiting quickly on F3. Try to use 'bye' instead.\n")
 				um.U.QuickExit(3)
 			}
 		}

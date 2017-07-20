@@ -59,7 +59,9 @@ func (tld *TextLineDialog) Layout(g *gocui.Gui) error {
 		v.BgColor = tld.BgColor
 		v.FgColor = tld.FgColor
 		fmt.Fprintf(v, "%s", tld.Text)
-		tld.G.SetCurrentView(tld.Title)
+	}
+	if _, err := g.SetCurrentView(tld.Title); err != nil {
+		return err
 	}
 	return nil
 }
