@@ -63,7 +63,8 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"	* SaveOutDir set above as Goublu property, default is /tmp" +
 	"	* Output announces the save file name\n" +
 	"	* You can do this as many times as you like during a session, a new file is created each time.\n" +
-	"* F5 expands a macro you set in the properties file.\n" +
+	"* F5 expands last element on command line as macro you set in the properties file.\n" +
+	"	* On empty line, F5 lists all macros.\n" +
 	"* F9 rotates through previous commands wrapping.\n" +
 	"* Ctrl-Space at the end of a partial command name rotates through completions, if any.\n"
 

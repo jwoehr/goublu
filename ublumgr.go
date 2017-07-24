@@ -220,6 +220,8 @@ func (um *UbluManager) tryExpand(text string) (newtext string) {
 		if candidate != "" {
 			newtext = text[0:strings.LastIndex(text, lastword)] + candidate
 		}
+	} else {
+		um.Ubluout(um.G, um.Opts.Macros.AllMacros())
 	}
 	return newtext
 }

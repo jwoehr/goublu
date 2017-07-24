@@ -74,10 +74,10 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* SaveOutDir set above as Goublu property, default is /tmp
 	* Output announces the save file name
 	* You can do this as many times as you like during a session, a new file is created each time.
-* F5 expands a macro you set in the properties file.
+* F5 expands last element on command line as macro you set in the properties file.
+	* On empty line, F5 lists all macros.
 * F9 rotates through previous commands wrapping.
 * Ctrl-Space at the end of a partial command name rotates through completions, if any.
-
 
 ## Notes
 
@@ -94,4 +94,4 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Command lines longer that the view width of the input line behave erratically in response to edit commands.
 	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
-Jack Woehr 2017-07-18
+Jack Woehr 2017-07-24
