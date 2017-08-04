@@ -94,4 +94,4 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Command lines longer that the view width of the input line behave erratically in response to edit commands.
 	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
-Jack Woehr 2017-07-24
+Jack Woehr 2017-08-04
