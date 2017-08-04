@@ -39,6 +39,46 @@ func NewOptions() (opts *Options) {
 	return opts
 }
 
+// // AllOpts returns a string of all options.
+// func (o *Options) AllOpts() (allopts string) {
+// 	m := make(map[string]string)
+// 	val := reflect.ValueOf(o).Elem()
+//
+// 	for i := 0; i < val.NumField(); i++ {
+//
+// 		valueField := val.Field(i)
+// 		typeField := val.Type().Field(i)
+//
+// 		f := valueField.Interface()
+// 		val := reflect.ValueOf(f)
+// 		m[typeField.Name] = val.String()
+// 	}
+//
+// 	for k, v := range m {
+// 		if k != "Macros" {
+// 			allopts += fmt.Sprintf("%s : %s\n", k, v)
+// 		}
+// 	}
+// 	return
+// }
+
+// AllOpts returns a string of all options.
+func (o *Options) AllOpts() (allopts string) {
+
+	allopts += "JavaOpts : "
+	for i := range o.JavaOpts {
+		allopts += "\n\t" + o.JavaOpts[i]
+	}
+	allopts += "\n"
+	allopts += "UbluDir : " + o.UbluDir + "\n"
+	allopts += "SaveOutDir : " + o.SaveOutDir + "\n"
+	allopts += "BgColorIn : " + NameFromColor(o.BgColorIn) + "\n"
+	allopts += "FgColorIn : " + NameFromColor(o.FgColorIn) + "\n"
+	allopts += "BgColorOut : " + NameFromColor(o.BgColorOut) + "\n"
+	allopts += "FgColorOut : " + NameFromColor(o.FgColorOut) + "\n"
+	return
+}
+
 // FromPropsFile parses and sets options from a property file.
 func (o *Options) FromPropsFile(fname string) (err error) {
 	f, err := os.Open(fname)
@@ -139,4 +179,31 @@ func ColorFromName(name string) (color gocui.Attribute) {
 		color = gocui.ColorDefault
 	}
 	return color
+}
+
+// NameFromColor returns the name of the gocui color Attribute.
+func NameFromColor(color gocui.Attribute) (name string) {
+	switch color {
+	case gocui.ColorBlack:
+		name = "ColorBlack"
+	case gocui.ColorRed:
+		name = "ColorRed"
+	case gocui.ColorGreen:
+		name = "ColorGreen"
+	case gocui.ColorYellow:
+		name = "ColorYellow"
+	case gocui.ColorBlue:
+		name = "ColorBlue"
+	case gocui.ColorMagenta:
+		name = "ColorMagenta"
+	case gocui.ColorCyan:
+		name = "ColorCyan"
+	case gocui.ColorWhite:
+		name = "ColorWhite"
+	case gocui.ColorDefault:
+		fallthrough
+	default:
+		name = "ColorDefault"
+	}
+	return
 }

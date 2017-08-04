@@ -75,7 +75,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Output announces the save file name
 	* You can do this as many times as you like during a session, a new file is created each time.
 * F5 expands last element on command line as macro you set in the properties file.
-	* On empty line, F5 lists all macros.
+	* On empty line, F5 lists all Goublu options and macros.
 * F9 rotates through previous commands wrapping.
 * Ctrl-Space at the end of a partial command name rotates through completions, if any.
 

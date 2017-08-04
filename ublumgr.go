@@ -221,7 +221,13 @@ func (um *UbluManager) tryExpand(text string) (newtext string) {
 			newtext = text[0:strings.LastIndex(text, lastword)] + candidate
 		}
 	} else {
+		um.Ubluout(um.G, "***\n")
+		um.Ubluout(um.G, "Goublu Options:\n")
+		um.Ubluout(um.G, um.Opts.AllOpts())
+		um.Ubluout(um.G, "***\n")
+		um.Ubluout(um.G, "Goublu Macros:\n")
 		um.Ubluout(um.G, um.Opts.Macros.AllMacros())
+		um.Ubluout(um.G, "***\n")
 	}
 	return newtext
 }

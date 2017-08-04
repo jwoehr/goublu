@@ -40,10 +40,8 @@ func (m *MacroExpander) Expand(key string) (expansion string) {
 
 // AllMacros makes a displayable string of all macros and their expansions
 func (m *MacroExpander) AllMacros() (allmacros string) {
-	allmacros = "***\nGoublu Macros:\n"
 	for key, value := range m.MMap {
-		allmacros = allmacros + key + " = " + value + "\n"
+		allmacros += key + " = " + value + "\n"
 	}
-	allmacros = allmacros + "***\n"
 	return
 }
