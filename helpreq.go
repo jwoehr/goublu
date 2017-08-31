@@ -41,6 +41,7 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"* Basic line editing\n" +
 	"	* Ctl-a move to head of line\n" +
 	"	* Ctl-b move one back.\n" +
+	"	* Ctl-d delete to end of current word.\n" +
 	"	* Ctl-e move to end of line.\n" +
 	"	* Ctl-f move one ahead.\n" +
 	"	* Ctl-k delete to end of line.\n" +

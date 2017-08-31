@@ -79,6 +79,8 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 			v.MoveCursor(0-cx, 0, false)
 		case key == gocui.KeyCtrlB:
 			v.MoveCursor(-1, 0, false)
+		case key == gocui.KeyCtrlD:
+			delWord(v, cx, text)
 		case key == gocui.KeyCtrlE || key == gocui.KeyEnd:
 			v.MoveCursor(len(text)-cx, 0, false)
 		case key == gocui.KeyCtrlF:
@@ -265,6 +267,31 @@ func backWord(v *gocui.View, cx int, text string) {
 			}
 		}
 		v.MoveCursor(i-cx, 0, false)
+	}
+}
+
+func delWord(v *gocui.View, cx int, text string) {
+	// if text[len(text)-1] != ' ' {
+	// 	text = text + " "
+	// }
+	offset := Min(cx, len(text))
+	head := text[:offset]
+	tail := text[offset:]
+	if len(tail) > 0 {
+		tailSplit := strings.SplitN(tail, " ", 2)
+		if len(tailSplit) > 1 {
+			if len(tailSplit[1]) > 0 {
+				if tailSplit[1][0] == ' ' {
+					replaceLine(v, cx, head+tailSplit[1])
+				} else {
+					replaceLine(v, cx, head+" "+tailSplit[1])
+				}
+			}
+		} else {
+			replaceLine(v, cx, text[:Max(0, cx)])
+		}
+	} else {
+		replaceLine(v, cx, text[:Max(0, cx)])
 	}
 }
 

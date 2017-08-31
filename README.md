@@ -53,6 +53,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Ctl-a move to head of line
 	* Ctl-b move one back.
 	* Ctl-e move to end of line.
+	* Ctl-d delete to end of current word.
 	* Ctl-f move one ahead.
 	* Ctl-k delete to end of line.
 		* This doesn't work entirely right if line is longer than view width.
