@@ -56,6 +56,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Ctl-f move one ahead.
 	* Ctl-k delete to end of line.
 		* This doesn't work entirely right if line is longer than view width.
+	* Alt-b back a word.
+	* Alt-f forward a word.
 	* These work as you would expect:
 		* Backspace
 		* Left-arrow

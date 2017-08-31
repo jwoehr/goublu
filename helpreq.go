@@ -45,6 +45,8 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"	* Ctl-f move one ahead.\n" +
 	"	* Ctl-k delete to end of line.\n" +
 	"		* This doesn't work entirely right if line is longer than view width.\n" +
+	"	* Alt-b back a word.\n" +
+	"	* Alt-f forward a word.\n" +
 	"	* These work as you would expect:\n" +
 	"		* Backspace\n" +
 	"		* Left-arrow\n" +

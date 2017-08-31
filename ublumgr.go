@@ -46,6 +46,10 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		switch {
 		case ch != 0 && mod == 0:
 			v.EditWrite(ch)
+		case ch == 'b' && mod == gocui.ModAlt:
+			backWord(v, cx, text)
+		case ch == 'f' && mod == gocui.ModAlt:
+			foreWord(v, cx, text)
 		case key == gocui.KeySpace:
 			v.EditWrite(' ')
 		case key == gocui.KeyBackspace || key == gocui.KeyBackspace2:
@@ -230,6 +234,38 @@ func (um *UbluManager) tryExpand(text string) (newtext string) {
 		um.Ubluout(um.G, "***\n")
 	}
 	return newtext
+}
+
+func foreWord(v *gocui.View, cx int, text string) {
+	nbfound := false
+	if cx <= len(text) {
+		i := cx
+		for ; i < len(text); i++ {
+			if text[i] != ' ' {
+				nbfound = true
+			}
+			if nbfound && text[i] == ' ' {
+				break
+			}
+		}
+		v.MoveCursor(i-cx, 0, false)
+	}
+}
+
+func backWord(v *gocui.View, cx int, text string) {
+	nbfound := false
+	if cx > 0 {
+		i := Min(cx, len(text))
+		for i = i - 1; i >= 0; i-- {
+			if text[i] != ' ' {
+				nbfound = true
+			}
+			if nbfound && text[i] == ' ' {
+				break
+			}
+		}
+		v.MoveCursor(i-cx, 0, false)
+	}
 }
 
 func replaceLine(v *gocui.View, cx int, newtext string) {
