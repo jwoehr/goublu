@@ -26,9 +26,10 @@ func (h *History) Append(l string) {
 // next history line request. The pointer is floored and does not wrap.
 func (h *History) Back() string {
 	var result string
-	if h.commandPointer > -1 {
+	h.commandPointer = Min(len(h.commandLines)-1, Max(-1, h.commandPointer))
+	if h.commandPointer >= 0 {
 		result = h.commandLines[h.commandPointer]
-		h.commandPointer = Max(h.commandPointer-1, -1)
+		h.commandPointer = h.commandPointer - 1
 	}
 	return result
 }
@@ -56,9 +57,13 @@ func (h *History) BackWrap() string {
 // next history line request. The pointer is roofed and does not wrap.
 func (h *History) Forward() string {
 	var result string
-	h.commandPointer = Max(-1, Min(h.commandPointer+1, len(h.commandLines)-1))
-	if h.commandPointer > -1 {
+	h.commandPointer = h.commandPointer + 1
+	if h.commandPointer >= len(h.commandLines) {
+		h.commandPointer = len(h.commandLines) - 1
+	} else if h.commandPointer > -1 {
 		result = h.commandLines[h.commandPointer]
+	} else {
+		h.commandPointer = -1
 	}
 	return result
 }
