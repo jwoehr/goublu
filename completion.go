@@ -99,6 +99,7 @@ func NewCompletor() (c *Completor) {
 	c.CMap["sleep"] = []string{}
 	c.CMap["smapi"] = []string{}
 	c.CMap["sock"] = []string{}
+	c.CMap["splfol"] = []string{}
 	c.CMap["spoolf"] = []string{}
 	c.CMap["spoolflist"] = []string{}
 	c.CMap["streamf"] = []string{}
@@ -119,6 +120,7 @@ func NewCompletor() (c *Completor) {
 	c.CMap["usage"] = []string{}
 	c.CMap["user"] = []string{}
 	c.CMap["userlist"] = []string{}
+	c.CMap["watson"] = []string{}
 	c.CMap["WHILE"] = []string{}
 	c.CMap["!"] = []string{}
 	c.CMap["#"] = []string{}
