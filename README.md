@@ -56,33 +56,29 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 ## Example setup
 In `.bash_aliases` (or `.bashrc` or whatever):
 
-	```
-
-	alias gu='/home/jax/gopath/src/github.com/jwoehr/goublu/main/goublu -g PropsFile=/home/jax/.config/ublu/goublu.properties $*'
-
-	```
+```
+alias gu='/home/jax/gopath/src/github.com/jwoehr/goublu/main/goublu -g PropsFile=/home/jax/.config/ublu/goublu.properties $*'
+```
 
 In the `PropsFile`:
 
-	```
-
-	#BgColorOut=ColorBlack
-	FgColorOut=ColorRed
-	UbluDir=/opt/ublu
-	SaveOutDir=.
-	JavaOpt=-Djavax.net.ssl.trustStore=/opt/ublu/keystore/ublutruststore
-	JavaOpt=-Dublu.includepath=/opt/ublu/examples:/opt/ublu/extensions
-	JavaOpt=-Dublu.usage.linelength=100
-	Macro=sys1 as400 -to @sys1 SYS1.FOO.COM myusrprf
-	Macro=in include
-  Macro=jl joblist -as400
- 	Macro=db db -to @myDb -dbtype as400 -connect
-	Macro=ublutest /QSYS.LIB/UBLUTEST.LIB/
-	Macro=spfl spoolflist -as400
-	Macro=ul userlist -as400
-	Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html\#
-
-	```
+```
+#BgColorOut=ColorBlack
+FgColorOut=ColorRed
+UbluDir=/opt/ublu
+SaveOutDir=.
+JavaOpt=-Djavax.net.ssl.trustStore=/opt/ublu/keystore/ublutruststore
+JavaOpt=-Dublu.includepath=/opt/ublu/examples:/opt/ublu/extensions
+JavaOpt=-Dublu.usage.linelength=100
+Macro=sys1 as400 -to @sys1 SYS1.FOO.COM myusrprf
+Macro=in include
+Macro=jl joblist -as400
+Macro=db db -to @myDb -dbtype as400 -connect
+Macro=ublutest /QSYS.LIB/UBLUTEST.LIB/
+Macro=spfl spoolflist -as400
+Macro=ul userlist -as400
+Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html\#
+```
 
 ## Working in Goublu
 * Basic line editing
