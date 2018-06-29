@@ -54,12 +54,12 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 * Assumes in absence of property set as above that Ublu is found in `/opt/ublu/ublu.jar`
 
 ## Example setup
-In .bash_aliases (or .bashrc or whatever)
+In .bash_aliases (or .bashrc or whatever):
 	```
 	alias gu='/home/jax/gopath/src/github.com/jwoehr/goublu/main/goublu -g PropsFile=/home/jax/.config/ublu/goublu.properties $*'
 	```
 
-In the referenced PropsFile `/home/jax/.config/ublu/goublu.properties`
+In the PropsFile:
 	```
 	#BgColorOut=ColorBlack
 	FgColorOut=ColorRed
