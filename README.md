@@ -77,7 +77,7 @@ Macro=db db -to @myDb -dbtype as400 -connect
 Macro=ublutest /QSYS.LIB/UBLUTEST.LIB/
 Macro=spfl spoolflist -as400
 Macro=ul userlist -as400
-Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html\#
+Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html#
 ```
 
 ## Working in Goublu
