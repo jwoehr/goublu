@@ -12,10 +12,13 @@ Goublu is a [Go language](http://golang.org) front end that provides a better co
 
 Report bugs or make feature requests in the [Issue Tracker](https://github.com/jwoehr/goublu/issues)
 
-## Usage
+## Building
 
 * Fetch:  `go get -u github.com/jwoehr/goublu`
+	* Or grab a [release of the source code](https://github.com/jwoehr/goublu/releases)
 * Build:  `cd $GOPATH/src/github.com/jwoehr/goublu/main; go build goublu.go`
+
+## Invoking
 * Invoke: `./goublu [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
 	* If the first argument to goublu is `-g` then the next element in the command line is assumed
 	to be a string of Goublu property-like options of the form Opt=Value, each option separated from
@@ -49,6 +52,29 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 		* `Macro=name freeform string of Ublu commands`
 			* Sets macro `name` to `freeform string of Ublu commands`
 * Assumes in absence of property set as above that Ublu is found in `/opt/ublu/ublu.jar`
+
+## Example setup
+In .bash_aliases (or .bashrc or whatever)
+	`alias gu='/home/jax/gopath/src/github.com/jwoehr/goublu/main/goublu -g PropsFile=/home/jax/.config/ublu/goublu.properties $*'`
+
+In the referenced PropsFile `/home/jax/.config/ublu/goublu.properties`
+	`#BgColorOut=ColorBlack
+	FgColorOut=ColorRed
+	UbluDir=/opt/ublu
+	SaveOutDir=.
+	JavaOpt=-Djavax.net.ssl.trustStore=/opt/ublu/keystore/ublutruststore
+	JavaOpt=-Dublu.includepath=/opt/ublu/examples:/opt/ublu/extensions
+	JavaOpt=-Dublu.usage.linelength=100
+	Macro=sys1 as400 -to @sys1 SYS1.FOO.COM myusrprf
+	Macro=in include
+  Macro=jl joblist -as400
+ 	Macro=db db -to @myDb -dbtype as400 -connect
+	Macro=ublutest /QSYS.LIB/UBLUTEST.LIB/
+	Macro=spfl spoolflist -as400
+	Macro=ul userlist -as400
+	Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html#`
+
+## Working in Goublu
 * Basic line editing
 	* Ctl-a move to head of line
 	* Ctl-b move one back.
