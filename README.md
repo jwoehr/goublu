@@ -55,10 +55,13 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 
 ## Example setup
 In .bash_aliases (or .bashrc or whatever)
-	`alias gu='/home/jax/gopath/src/github.com/jwoehr/goublu/main/goublu -g PropsFile=/home/jax/.config/ublu/goublu.properties $*'`
+	```
+	alias gu='/home/jax/gopath/src/github.com/jwoehr/goublu/main/goublu -g PropsFile=/home/jax/.config/ublu/goublu.properties $*'
+	```
 
 In the referenced PropsFile `/home/jax/.config/ublu/goublu.properties`
-	`#BgColorOut=ColorBlack
+	```
+	#BgColorOut=ColorBlack
 	FgColorOut=ColorRed
 	UbluDir=/opt/ublu
 	SaveOutDir=.
@@ -72,7 +75,8 @@ In the referenced PropsFile `/home/jax/.config/ublu/goublu.properties`
 	Macro=ublutest /QSYS.LIB/UBLUTEST.LIB/
 	Macro=spfl spoolflist -as400
 	Macro=ul userlist -as400
-	Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html#`
+	Macro=ref desktop -browse file:///home/jax/work/Ublu/Checkout/ublu/userdoc/ubluref.html#
+	```
 
 ## Working in Goublu
 * Basic line editing
