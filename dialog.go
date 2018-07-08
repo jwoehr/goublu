@@ -20,6 +20,8 @@ type TextLineDialog struct {
 	Text       string
 	Result     string
 	ResultChan chan string
+	UbluinBuf  string
+	UbluoutBuf string
 }
 
 // NewTextLineDialog instances a TextLineDialog.
@@ -68,6 +70,11 @@ func (tld *TextLineDialog) Layout(g *gocui.Gui) error {
 
 // StartDialog shows the dialog.
 func (tld *TextLineDialog) StartDialog(exitChan chan string) error {
+	v, _ := tld.G.View("Ubluin")
+	tld.UbluinBuf = v.Buffer()
+	v, _ = tld.G.View("Ubluout")
+	tld.UbluoutBuf = v.Buffer()
+	tld.G.SetManager(tld.UM, tld)
 	tld.ResultChan = exitChan
 	tld.G.SetManager(tld.UM, tld)
 	tld.UM.Dialoging = true
@@ -117,6 +124,13 @@ func (tld *TextLineDialog) EndDialog(g *gocui.Gui, v *gocui.View) error {
 	g.SetManager(tld.UM)
 	tld.UM.Dialoging = false
 	tld.UM.Layout(g)
+	v, _ = g.View("Ubluin")
+	v.Clear()
+	for _, ch := range strings.Trim(strings.TrimSpace(tld.UbluinBuf), "\000") {
+		v.EditWrite(ch)
+	}
+	v, _ = g.View("Ubluout")
+	fmt.Fprintf(v, "%s\n", strings.Trim(strings.TrimSpace(tld.UbluoutBuf), "\000"))
 	tld.ResultChan <- tld.Result
 	return nil
 }
