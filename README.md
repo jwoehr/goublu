@@ -92,6 +92,8 @@ Macro=ref desktop -browse file:///opt/ublu/userdoc/ubluref.html#
 	* Alt-b back a word.
 	* Alt-f forward a word.
 	* These work as you would expect:
+		* Home
+		* End
 		* Backspace
 		* Left-arrow
 		* Right-arrow

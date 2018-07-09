@@ -49,6 +49,8 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"	* Alt-b back a word.\n" +
 	"	* Alt-f forward a word.\n" +
 	"	* These work as you would expect:\n" +
+	"		* Home\n" +
+	"		* End\n" +
 	"		* Backspace\n" +
 	"		* Left-arrow\n" +
 	"		* Right-arrow\n" +
@@ -62,8 +64,8 @@ const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other
 	"* F1 shows Goublu help\n" +
 	"* F2 shows entire session's output\n" +
 	"* F3 offers a quick exit for when Ublu gets caught in a loop or network timeout\n" +
-	"* F4 saves the entire session's output to a file `SaveOutDir/goublu.out.`_xxx..._\n" +
-	"	* SaveOutDir set above as Goublu property, default is /tmp" +
+	"* F4 saves the entire session's output to a file SaveOutDir/goublu.out._xxx..._\n" +
+	"	* SaveOutDir set above as Goublu property, default is /tmp\n" +
 	"	* Output announces the save file name\n" +
 	"	* You can do this as many times as you like during a session, a new file is created each time.\n" +
 	"* F5 expands last element on command line as macro you set in the properties file.\n" +
