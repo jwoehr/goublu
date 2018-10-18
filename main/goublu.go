@@ -13,6 +13,8 @@ import (
 	"os"
 )
 
+var compileDate string
+
 func main() {
 	args := goublu.NewArgs(os.Args[:])
 	options := goublu.NewOptions()
@@ -63,5 +65,6 @@ func main() {
 
 		fmt.Println("Ublu has exited.")
 	}
+	fmt.Println("Goublu was compiled " + compileDate)
 	fmt.Println("Goodbye from Goublu!")
 }
