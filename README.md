@@ -16,6 +16,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 
 * Fetch:  `go get -u github.com/jwoehr/goublu`
 	* Or grab a [release of the source code](https://github.com/jwoehr/goublu/releases)
+		* It's recommended you build from the latest release. I fiddle around with stuff between releases!
 * Build:  `cd $GOPATH/src/github.com/jwoehr/goublu/main; go build goublu.go`
 
 ## Invoking
