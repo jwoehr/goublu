@@ -18,6 +18,10 @@ var compileDate string
 var goubluVersion string
 
 func main() {
+	if len(os.Args) > 1 && (os.Args[1] == "-v" || os.Args[1] == "--version") {
+		fmt.Println("Goublu version", goubluVersion, "compiled", compileDate)
+		os.Exit(0)
+	}
 	args := goublu.NewArgs(os.Args[:])
 	options := goublu.NewOptions()
 	options.FromPropStrings(args.Goubluargs)
@@ -66,7 +70,6 @@ func main() {
 		ublu.Close()
 
 		fmt.Println("Ublu has exited.")
-		fmt.Println("Goublu version", goubluVersion, "compiled", compileDate)
 	}
 
 	fmt.Println("Goodbye from Goublu!")

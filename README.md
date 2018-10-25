@@ -20,7 +20,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 * Build:  `cd $GOPATH/src/github.com/jwoehr/goublu/main; go build goublu.go`
 
 ## Invoking
-* Invoke: `./goublu [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
+* Invoke: `./goublu [-v] [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
+  * If the first argument to goublu is `-v` then Goublu prints a version message and exits 0. 
 	* If the first argument to goublu is `-g` then the next element in the command line is assumed
 	to be a string of Goublu property-like options of the form Opt=Value, each option separated from
 	the next by `:` . All remaining commandline arguments are passed to Ublu. The Goublu options and their
