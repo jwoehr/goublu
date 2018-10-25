@@ -40,6 +40,8 @@ func main() {
 		um := goublu.NewUbluManager(ublu, g, options, history)
 		g.SetManager(um)
 		g.Cursor = true
+		um.CompileDate = compileDate
+		um.Version = goubluVersion
 
 		// Deliver Ublu's stdout
 		go func() {

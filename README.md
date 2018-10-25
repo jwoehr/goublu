@@ -21,7 +21,7 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 
 ## Invoking
 * Invoke: `./goublu [-v] [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
-  * If the first argument to goublu is `-v` then Goublu prints a version message and exits 0. 
+  * If the first argument to goublu is `-v` then Goublu prints a version message and exits 0.
 	* If the first argument to goublu is `-g` then the next element in the command line is assumed
 	to be a string of Goublu property-like options of the form Opt=Value, each option separated from
 	the next by `:` . All remaining commandline arguments are passed to Ublu. The Goublu options and their
@@ -114,7 +114,7 @@ Macro=ref desktop -browse file:///opt/ublu/userdoc/ubluref.html#
 	* Output announces the save file name
 	* You can do this as many times as you like during a session, a new file is created each time.
 * F5 expands last element on command line as macro you set in the properties file.
-	* On empty line, F5 lists all Goublu options and macros.
+	* On empty line, F5 lists Goublu version, compile date, and all Goublu options and macros.
 * F9 rotates through previous commands wrapping.
 * Ctrl-Space at the end of a partial command name rotates through completions, if any.
 
@@ -123,6 +123,8 @@ Macro=ref desktop -browse file:///opt/ublu/userdoc/ubluref.html#
 * The Ublu prompt appears on a line by itself in Goublu.
 * Goublu "history" is input line recall and is separate from Ublu's own `history` command.
 * Any Ublu application program output should include a newline as the Goublu output mechanism requires it.
+* This document as displayed on the project page always reflects the current state of the tree and may be in
+advance of the release version.
 
 ## Bugs
 
@@ -133,4 +135,4 @@ Macro=ref desktop -browse file:///opt/ublu/userdoc/ubluref.html#
 	* Command lines longer that the view width of the input line behave erratically in response to edit commands.
 	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
-Jack Woehr 2018-06-29
+Jack Woehr 2018-10-24

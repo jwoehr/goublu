@@ -25,6 +25,8 @@ type UbluManager struct {
 	Completor         *Completor
 	ExitChan          chan string
 	Dialoging         bool
+	CompileDate       string
+	Version           string
 }
 
 // NewUbluManager instances a new manager.
@@ -227,6 +229,7 @@ func (um *UbluManager) tryExpand(text string) (newtext string) {
 			newtext = text[0:strings.LastIndex(text, lastword)] + candidate
 		}
 	} else {
+		um.Ubluout(um.G, "Goublu version "+um.Version+" compiled "+um.CompileDate+"\n")
 		um.Ubluout(um.G, "***\n")
 		um.Ubluout(um.G, "Goublu Options:\n")
 		um.Ubluout(um.G, um.Opts.AllOpts())
