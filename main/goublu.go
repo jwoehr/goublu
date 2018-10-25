@@ -7,13 +7,15 @@ package main
 
 import (
 	"fmt"
-	"github.com/jwoehr/gocui"
-	"github.com/jwoehr/goublu"
 	"log"
 	"os"
+
+	"github.com/jwoehr/gocui"
+	"github.com/jwoehr/goublu"
 )
 
 var compileDate string
+var goubluVersion string
 
 func main() {
 	args := goublu.NewArgs(os.Args[:])
@@ -64,7 +66,8 @@ func main() {
 		ublu.Close()
 
 		fmt.Println("Ublu has exited.")
+		fmt.Println("Goublu version", goubluVersion, "compiled", compileDate)
 	}
-	fmt.Println("Goublu was compiled " + compileDate)
+
 	fmt.Println("Goodbye from Goublu!")
 }
