@@ -135,4 +135,15 @@ advance of the release version.
 	* Command lines longer that the view width of the input line behave erratically in response to edit commands.
 	* On Mac OS X in Terminal, mouse actions fill the input line with escape sequences and do not otherwise work.
 
-Jack Woehr 2018-10-24
+## The default branch has been renamed!
+
+master is now named main
+
+If you have a local clone, you can update it by running:
+```
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
+```
+Jack Woehr 2021-04-13
