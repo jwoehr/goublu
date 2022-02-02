@@ -8,8 +8,8 @@ import (
 	"log"
 	"strings"
 
-	"github.com/jwoehr/gocui"
-	"github.com/jwoehr/termbox-go"
+	"github.com/jroimartin/gocui"
+	"github.com/nsf/termbox-go"
 )
 
 // How far from bottom we reserve our input area

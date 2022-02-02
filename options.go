@@ -9,7 +9,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/jwoehr/gocui"
+	"github.com/jroimartin/gocui"
 )
 
 // Options holds user options.

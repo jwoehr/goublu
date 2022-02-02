@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jwoehr/gocui"
+	"github.com/jroimartin/gocui"
 )
 
 // ReqManager is a gocui Manager for Requestors.

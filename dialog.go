@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/jwoehr/gocui"
+	"github.com/jroimartin/gocui"
 )
 
 // TextLineDialog is what it sez.

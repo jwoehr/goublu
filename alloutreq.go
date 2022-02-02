@@ -2,7 +2,7 @@
 package goublu
 
 import (
-	"github.com/jwoehr/gocui"
+	"github.com/jroimartin/gocui"
 )
 
 // NewAllOutReq pops a view of all output in a Requestor

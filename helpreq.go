@@ -2,7 +2,7 @@
 package goublu
 
 import (
-	"github.com/jwoehr/gocui"
+	"github.com/jroimartin/gocui"
 )
 
 const helpstring = "* Invoke: ./goublu [-g GoubluOpt1=SomeThing:GoubluOpt2=Other:...] ublu_arg ublu_arg ...\n" +
