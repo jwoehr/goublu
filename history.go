@@ -1,5 +1,5 @@
 // Package goublu History provides command line history in the goublu Ublu input area.
-package goublu
+package main
 
 // History keeps history lines from the goublu input line and output from the console out.
 type History struct {

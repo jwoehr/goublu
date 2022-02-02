@@ -1,5 +1,5 @@
 // Package goublu UbluManager is the gocui manager for Ublu input and output.
-package goublu
+package main
 
 import (
 	"fmt"

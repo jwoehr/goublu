@@ -1,5 +1,5 @@
 // Package goublu Args manages the os-passed-in args between goublu itself and Ublu.
-package goublu
+package main
 
 // Args holds the split of the os arguments between goublu args and Ublu args.
 type Args struct {

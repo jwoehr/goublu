@@ -1,5 +1,5 @@
 // Package goublu MacroExpander does expansion of macros.
-package goublu
+package main
 
 import "strings"
 

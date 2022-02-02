@@ -1,5 +1,5 @@
 // Package goublu AllOutReq is the F2 Show All Output requestor
-package goublu
+package main
 
 import (
 	"github.com/jroimartin/gocui"

@@ -1,5 +1,5 @@
 // Package goublu ReqManager is the gocui manager for requestors.
-package goublu
+package main
 
 import (
 	"fmt"

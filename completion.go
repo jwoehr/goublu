@@ -1,5 +1,5 @@
 // Package goublu Completion does partial completion
-package goublu
+package main
 
 import (
 	// "fmt"

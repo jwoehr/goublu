@@ -1,5 +1,5 @@
 // Package goublu HelpReq is the F1 Help requestor.
-package goublu
+package main
 
 import (
 	"github.com/jroimartin/gocui"

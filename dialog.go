@@ -1,5 +1,5 @@
 // Package goublu Dialog contains any user response dialogs for Goublu.
-package goublu
+package main
 
 import (
 	"fmt"

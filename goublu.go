@@ -3,8 +3,7 @@
 // https://github.com/jwoehr/ublu Ublu, a Java-coded domain-specific language
 // for remote programming of IBM midrange and mainframe systems.
 // Neither this project nor Ublu are associated with IBM.
-// package main
-package goublu
+package main
 
 import (
 	"fmt"

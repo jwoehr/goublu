@@ -1,5 +1,5 @@
 // Package goublu Options parses and stores user options for Goublu.
-package goublu
+package main
 
 import (
 	"bufio"

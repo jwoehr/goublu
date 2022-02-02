@@ -1,5 +1,5 @@
 // Package goublu Ublu is the struct managing execution of the Java program Ublu.
-package goublu
+package main
 
 import (
 	"bufio"
