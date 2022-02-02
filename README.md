@@ -16,8 +16,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 
 * Fetch:  `go get -u github.com/jwoehr/goublu`
 	* Or grab a [release of the source code](https://github.com/jwoehr/goublu/releases)
-		* It's recommended you build from the latest release. I fiddle around with stuff between releases!
-* Build:  `cd $GOPATH/src/github.com/jwoehr/goublu/main; go build goublu.go`
+		* It's recommended you build from the latest release.
+* Build:  `cd $GOPATH/src/github.com/jwoehr/goublu; ./make.sh`
 
 ## Invoking
 * Invoke: `./goublu [-v] [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
@@ -146,4 +146,4 @@ git fetch origin
 git branch -u origin/main main
 git remote set-head origin -a
 ```
-Jack Woehr 2021-04-13
+Jack Woehr 2022-02-02
