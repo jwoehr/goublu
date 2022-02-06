@@ -13,12 +13,12 @@ import (
 	"github.com/jroimartin/gocui"
 )
 
-var compileDate string
-var goubluVersion string
+var CompileDate string
+var GoubluVersion string
 
 func main() {
 	if len(os.Args) > 1 && (os.Args[1] == "-v" || os.Args[1] == "--version") {
-		fmt.Println("Goublu version", goubluVersion, "compiled", compileDate)
+		fmt.Println("Goublu version", GoubluVersion, "compiled", CompileDate)
 		os.Exit(0)
 	}
 	args := NewArgs(os.Args[:])
@@ -39,8 +39,8 @@ func main() {
 		um := NewUbluManager(ublu, g, options, history)
 		g.SetManager(um)
 		g.Cursor = true
-		um.CompileDate = compileDate
-		um.Version = goubluVersion
+		um.CompileDate = CompileDate
+		um.Version = GoubluVersion
 
 		// Deliver Ublu's stdout
 		go func() {
