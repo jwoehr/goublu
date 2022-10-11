@@ -18,7 +18,8 @@ Report bugs or make feature requests in the [Issue Tracker](https://github.com/j
 	* Or grab a [release of the source code](https://github.com/jwoehr/goublu/releases)
 		* It's recommended you build from the latest release.
 * Build:  `cd $GOPATH/src/github.com/jwoehr/goublu; ./make.sh`
-
+  * Then copy `goublu` to your Golang binary path.
+* Note: If you just do `go build` it won't compile version info into the image.
 ## Invoking
 * Invoke: `./goublu [-v] [-g "GoubluOpt1=SomeThing:GoubluOpt2=Other:..."] ublu_arg ublu_arg ...`
   * If the first argument to goublu is `-v` then Goublu prints a version message and exits 0.
@@ -146,4 +147,4 @@ git fetch origin
 git branch -u origin/main main
 git remote set-head origin -a
 ```
-Jack Woehr 2022-02-02
+Jack Woehr 2022-10-10
