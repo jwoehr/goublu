@@ -40,89 +40,7 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		ExitChan:  make(chan string),
 		Dialoging: false,
 	}
-	um.CommandLineEditor = gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
-		cx, cy := v.Cursor()
-		text, _ := v.Line(cy)
-		text = strings.Trim(strings.TrimSpace(text), "\000")
-
-		switch {
-		case ch != 0 && mod == 0:
-			v.EditWrite(ch)
-		case ch == 'b' && mod == gocui.ModAlt:
-			backWord(v, cx, text)
-		case ch == 'f' && mod == gocui.ModAlt:
-			foreWord(v, cx, text)
-		case key == gocui.KeySpace:
-			v.EditWrite(' ')
-		case key == gocui.KeyBackspace || key == gocui.KeyBackspace2:
-			v.EditDelete(true)
-		case key == gocui.KeyDelete:
-			v.EditDelete(false)
-		case key == gocui.KeyInsert:
-			v.Overwrite = !v.Overwrite
-		case key == gocui.KeyEnter:
-			um.Ubluin(um.G, v)
-			termbox.Interrupt() // for good luck
-		case key == gocui.KeyArrowDown:
-			replaceLine(v, cx, um.Hist.Forward())
-		case key == gocui.KeyArrowUp:
-			replaceLine(v, cx, um.Hist.Back())
-		case key == gocui.KeyPgup:
-			replaceLine(v, cx, um.Hist.First())
-		case key == gocui.KeyPgdn:
-			replaceLine(v, cx, um.Hist.Last())
-		case key == gocui.KeyArrowLeft:
-			v.MoveCursor(-1, 0, false)
-		case key == gocui.KeyArrowRight:
-			v.MoveCursor(1, 0, false)
-		case key == gocui.KeyCtrlSpace:
-			replaceLine(v, cx, um.tryComplete(text))
-		case key == gocui.KeyCtrlA || key == gocui.KeyHome:
-			v.MoveCursor(0-cx, 0, false)
-		case key == gocui.KeyCtrlB:
-			v.MoveCursor(-1, 0, false)
-		case key == gocui.KeyCtrlD:
-			delWord(v, cx, text)
-		case key == gocui.KeyCtrlE || key == gocui.KeyEnd:
-			v.MoveCursor(len(text)-cx, 0, false)
-		case key == gocui.KeyCtrlF:
-			v.MoveCursor(1, 0, false)
-		case key == gocui.KeyCtrlK:
-			// this isn't quite correct but sorta works
-			for i := cy; i < len(text); i++ {
-				v.EditDelete(false)
-			}
-		case key == gocui.KeyF1:
-			rm := NewHelpReq(um, um.G)
-			rm.StartReq()
-		case key == gocui.KeyF2:
-			rm := NewAllOutReq(um, um.G)
-			rm.StartReq()
-		case key == gocui.KeyF3:
-			um.doExitDialog(g, 9, 3)
-		case key == gocui.KeyF4:
-			f, err := ioutil.TempFile(um.Opts.SaveOutDir, "goublu.out.")
-			if err != nil {
-				log.Panicln(err)
-			}
-			um.Ubluout(um.G, "Saving output to "+f.Name()+"\n")
-			f.Write([]byte(um.Hist.AllOut))
-			f.Close()
-		case key == gocui.KeyF5:
-			replaceLine(v, cx, um.tryExpand(text))
-		case key == gocui.KeyF9:
-			replaceLine(v, cx, um.Hist.BackWrap())
-		case key == gocui.MouseLeft:
-		case key == gocui.MouseMiddle:
-		case key == gocui.MouseRight:
-		case key == gocui.MouseRelease:
-		case key == gocui.MouseWheelUp:
-		case key == gocui.MouseWheelDown:
-		}
-		if key != gocui.KeyCtrlSpace {
-			um.Completor.Valid = false
-		}
-	})
+	um.CommandLineEditor = um.createCommandLineEditor()
 	go func() {
 		var exitMsg string
 		for {
@@ -135,6 +53,217 @@ func NewUbluManager(ublu *Ublu, g *gocui.Gui, opts *Options, hist *History) (um 
 		}
 	}()
 	return um
+}
+
+// createCommandLineEditor creates the editor function with panic recovery.
+func (um *UbluManager) createCommandLineEditor() gocui.Editor {
+	return gocui.EditorFunc(func(v *gocui.View, key gocui.Key, ch rune, mod gocui.Modifier) {
+		defer func() {
+			if r := recover(); r != nil {
+				log.Printf("Editor panic recovered: %v", r)
+				um.Ubluout(um.G, fmt.Sprintf("Editor error: %v\n", r))
+			}
+		}()
+
+		cx, cy := v.Cursor()
+		text, _ := v.Line(cy)
+		text = strings.Trim(strings.TrimSpace(text), "\000")
+
+		// Handle character input
+		if um.handleCharacterInput(v, ch, mod) {
+			return
+		}
+
+		// Handle navigation keys
+		if um.handleNavigationKeys(v, key, cx, text) {
+			return
+		}
+
+		// Handle editing keys
+		if um.handleEditingKeys(v, key, cx, cy, text) {
+			return
+		}
+
+		// Handle function keys
+		if um.handleFunctionKeys(v, key, cx, text) {
+			return
+		}
+
+		// Handle mouse events (no-op for now)
+		um.handleMouseEvents(key)
+
+		// Invalidate completion if not Ctrl-Space
+		if key != gocui.KeyCtrlSpace {
+			um.Completor.Valid = false
+		}
+	})
+}
+
+// handleCharacterInput handles regular character input and Alt-modified characters.
+func (um *UbluManager) handleCharacterInput(v *gocui.View, ch rune, mod gocui.Modifier) bool {
+	cx, _ := v.Cursor()
+	text, _ := v.Line(0)
+	text = strings.Trim(strings.TrimSpace(text), "\000")
+
+	switch {
+	case ch != 0 && mod == 0:
+		v.EditWrite(ch)
+		return true
+	case ch == 'b' && mod == gocui.ModAlt:
+		backWord(v, cx, text)
+		return true
+	case ch == 'f' && mod == gocui.ModAlt:
+		foreWord(v, cx, text)
+		return true
+	}
+	return false
+}
+
+// handleNavigationKeys handles cursor movement keys.
+func (um *UbluManager) handleNavigationKeys(v *gocui.View, key gocui.Key, cx int, text string) bool {
+	switch key {
+	case gocui.KeyArrowLeft:
+		v.MoveCursor(-1, 0, false)
+		return true
+	case gocui.KeyArrowRight:
+		v.MoveCursor(1, 0, false)
+		return true
+	case gocui.KeyArrowUp:
+		replaceLine(v, cx, um.Hist.Back())
+		return true
+	case gocui.KeyArrowDown:
+		replaceLine(v, cx, um.Hist.Forward())
+		return true
+	case gocui.KeyPgup:
+		replaceLine(v, cx, um.Hist.First())
+		return true
+	case gocui.KeyPgdn:
+		replaceLine(v, cx, um.Hist.Last())
+		return true
+	case gocui.KeyCtrlA, gocui.KeyHome:
+		v.MoveCursor(0-cx, 0, false)
+		return true
+	case gocui.KeyCtrlE, gocui.KeyEnd:
+		v.MoveCursor(len(text)-cx, 0, false)
+		return true
+	case gocui.KeyCtrlB:
+		v.MoveCursor(-1, 0, false)
+		return true
+	case gocui.KeyCtrlF:
+		v.MoveCursor(1, 0, false)
+		return true
+	}
+	return false
+}
+
+// handleEditingKeys handles text editing operations.
+func (um *UbluManager) handleEditingKeys(v *gocui.View, key gocui.Key, cx, cy int, text string) bool {
+	switch key {
+	case gocui.KeySpace:
+		v.EditWrite(' ')
+		return true
+	case gocui.KeyBackspace, gocui.KeyBackspace2:
+		v.EditDelete(true)
+		return true
+	case gocui.KeyDelete:
+		v.EditDelete(false)
+		return true
+	case gocui.KeyInsert:
+		v.Overwrite = !v.Overwrite
+		return true
+	case gocui.KeyEnter:
+		um.Ubluin(um.G, v)
+		termbox.Interrupt()
+		return true
+	case gocui.KeyCtrlD:
+		delWord(v, cx, text)
+		return true
+	case gocui.KeyCtrlK:
+		// Delete to end of line
+		for i := cy; i < len(text); i++ {
+			v.EditDelete(false)
+		}
+		return true
+	case gocui.KeyCtrlSpace:
+		replaceLine(v, cx, um.tryComplete(text))
+		return true
+	}
+	return false
+}
+
+// handleFunctionKeys handles F1-F12 function keys.
+func (um *UbluManager) handleFunctionKeys(v *gocui.View, key gocui.Key, cx int, text string) bool {
+	switch key {
+	case gocui.KeyF1:
+		um.handleF1Help()
+		return true
+	case gocui.KeyF2:
+		um.handleF2Review()
+		return true
+	case gocui.KeyF3:
+		um.handleF3Exit()
+		return true
+	case gocui.KeyF4:
+		um.handleF4Save()
+		return true
+	case gocui.KeyF5:
+		replaceLine(v, cx, um.tryExpand(text))
+		return true
+	case gocui.KeyF9:
+		replaceLine(v, cx, um.Hist.BackWrap())
+		return true
+	}
+	return false
+}
+
+// handleF1Help shows help dialog.
+func (um *UbluManager) handleF1Help() {
+	rm := NewHelpReq(um, um.G)
+	rm.StartReq()
+}
+
+// handleF2Review shows output review dialog.
+func (um *UbluManager) handleF2Review() {
+	rm := NewAllOutReq(um, um.G)
+	rm.StartReq()
+}
+
+// handleF3Exit shows exit confirmation dialog.
+func (um *UbluManager) handleF3Exit() {
+	um.doExitDialog(um.G, 9, 3)
+}
+
+// handleF4Save saves output to a file with error handling.
+func (um *UbluManager) handleF4Save() {
+	defer func() {
+		if r := recover(); r != nil {
+			log.Printf("Error saving output: %v", r)
+			um.Ubluout(um.G, fmt.Sprintf("Error saving output: %v\n", r))
+		}
+	}()
+
+	f, err := ioutil.TempFile(um.Opts.SaveOutDir, "goublu.out.")
+	if err != nil {
+		um.Ubluout(um.G, fmt.Sprintf("Error creating save file: %v\n", err))
+		return
+	}
+	defer f.Close()
+
+	um.Ubluout(um.G, "Saving output to "+f.Name()+"\n")
+	if _, err := f.Write([]byte(um.Hist.AllOut)); err != nil {
+		um.Ubluout(um.G, fmt.Sprintf("Error writing to file: %v\n", err))
+		return
+	}
+}
+
+// handleMouseEvents handles mouse input (currently no-op).
+func (um *UbluManager) handleMouseEvents(key gocui.Key) bool {
+	switch key {
+	case gocui.MouseLeft, gocui.MouseMiddle, gocui.MouseRight,
+		gocui.MouseRelease, gocui.MouseWheelUp, gocui.MouseWheelDown:
+		return true
+	}
+	return false
 }
 
 // Ubluin pipes input to Ublu.
