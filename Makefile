@@ -13,7 +13,7 @@ INSTALL_PATH := $(GOPATH)/bin
 .DEFAULT_GOAL := build
 
 # Phony targets (not actual files)
-.PHONY: all build install clean test fmt vet lint help run
+.PHONY: all build install clean test test-coverage fmt vet lint help run
 
 # Build the binary
 build:
@@ -38,6 +38,13 @@ clean:
 test:
 	@echo "Running tests..."
 	go test -v ./...
+
+# Run tests with coverage
+test-coverage:
+	@echo "Running tests with coverage..."
+	go test -v -coverprofile=coverage.out ./...
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report generated: coverage.html"
 
 # Format code
 fmt:
@@ -69,16 +76,17 @@ all: fmt vet test build
 # Show help
 help:
 	@echo "Goublu Makefile targets:"
-	@echo "  make build    - Build the binary (default)"
-	@echo "  make install  - Install to GOPATH/bin"
-	@echo "  make clean    - Remove build artifacts"
-	@echo "  make test     - Run tests"
-	@echo "  make fmt      - Format code"
-	@echo "  make vet      - Run go vet"
-	@echo "  make lint     - Run golangci-lint (if installed)"
-	@echo "  make run      - Build and run"
-	@echo "  make all      - Run fmt, vet, test, and build"
-	@echo "  make help     - Show this help message"
+	@echo "  make build          - Build the binary (default)"
+	@echo "  make install        - Install to GOPATH/bin"
+	@echo "  make clean          - Remove build artifacts"
+	@echo "  make test           - Run tests"
+	@echo "  make test-coverage  - Run tests with coverage report"
+	@echo "  make fmt            - Format code"
+	@echo "  make vet            - Run go vet"
+	@echo "  make lint           - Run golangci-lint (if installed)"
+	@echo "  make run            - Build and run"
+	@echo "  make all            - Run fmt, vet, test, and build"
+	@echo "  make help           - Show this help message"
 	@echo ""
 	@echo "Current version: $(VERSION)"
 	@echo "Build time: $(BUILD_TIME)"

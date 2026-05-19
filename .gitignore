@@ -19,6 +19,9 @@ go.work
 
 # Build artifacts
 goublu
+coverage.out
+coverage.html
+*.test
 /goublu
 
 # Backup files

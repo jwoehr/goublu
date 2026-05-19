@@ -42,12 +42,13 @@ make install
 The project includes a Makefile with automatic version detection from git tags:
 
 ```bash
-make build    # Build the binary
-make install  # Install to $GOPATH/bin
-make clean    # Remove build artifacts
-make test     # Run tests
-make all      # Run fmt, vet, test, and build
-make help     # Show all available targets
+make build         # Build the binary
+make install       # Install to $GOPATH/bin
+make clean         # Remove build artifacts
+make test          # Run tests
+make test-coverage # Run tests with coverage report
+make all           # Run fmt, vet, test, and build
+make help          # Show all available targets
 ```
 
 #### Using the Legacy Shell Script
@@ -184,6 +185,41 @@ Macro=ref desktop -browse file:///opt/ublu/userdoc/ubluref.html#
 - F9 rotates through previous commands wrapping.
 - Ctrl-Space at the end of a partial command name rotates through completions, if any.
 
+## Testing
+
+The project includes comprehensive unit tests for core functionality:
+
+```bash
+# Run all tests
+make test
+
+# Run tests with coverage report
+make test-coverage
+
+# Run specific tests
+go test -v -run TestStartStreamReader
+
+# Run benchmarks
+go test -bench=. -benchmem
+```
+
+### Test Coverage
+
+Current test coverage focuses on:
+
+- Stream reader functionality with context cancellation
+- Panic recovery in stream readers
+- Concurrent stream reader operations
+- GUI initialization error handling
+- Context cancellation behavior
+
+The test suite includes:
+
+- **Unit tests**: Testing individual functions in isolation
+- **Integration tests**: Testing component interactions
+- **Concurrency tests**: Verifying thread-safe operations
+- **Benchmarks**: Performance testing of critical paths
+
 ## Notes
 
 - The Ublu prompt appears on a line by itself in Goublu.
@@ -236,6 +272,26 @@ The main function has been significantly refactored to improve code quality, mai
 - **Debuggability**: Visual distinction for errors and specific exit codes
 - **Readability**: Main function reduced from ~82 lines to ~45 lines
 - **Testability**: Extracted functions can be tested independently
+
+### Unit Tests Added
+
+Comprehensive test suite covering:
+
+- Stream reader with multiple scenarios (empty input, multiple lines, context cancellation)
+- Panic recovery in stream readers
+- Concurrent stream reader operations
+- GUI initialization with error handling
+- Context cancellation verification
+- Performance benchmarks
+
+Test execution:
+
+```bash
+make test           # Run all tests
+make test-coverage  # Generate coverage report (coverage.html)
+```
+
+Current coverage: 4.9% of statements (focused on newly refactored functions)
 
 ## Bugs
 
