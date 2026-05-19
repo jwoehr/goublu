@@ -46,9 +46,24 @@ func NewUblu(args *Args, options *Options) (u *Ublu) {
 
 	cmd := exec.Command("java", ubluArgs...)
 
-	stdin, _ := cmd.StdinPipe()
-	stdout, _ := cmd.StdoutPipe()
-	stderr, _ := cmd.StderrPipe()
+	stdin, err := cmd.StdinPipe()
+	if err != nil {
+		fmt.Printf("Error creating stdin pipe: %v\n", err)
+		return nil
+	}
+
+	stdout, err := cmd.StdoutPipe()
+	if err != nil {
+		fmt.Printf("Error creating stdout pipe: %v\n", err)
+		return nil
+	}
+
+	stderr, err := cmd.StderrPipe()
+	if err != nil {
+		fmt.Printf("Error creating stderr pipe: %v\n", err)
+		return nil
+	}
+
 	outreader := bufio.NewReader(stdout)
 	errreader := bufio.NewReader(stderr)
 
@@ -66,9 +81,9 @@ func NewUblu(args *Args, options *Options) (u *Ublu) {
 	return u
 }
 
-// Run runs the Ublu instance.
-func (u *Ublu) Run() {
-	u.Cmd.Run()
+// Run runs the Ublu instance and returns any error.
+func (u *Ublu) Run() error {
+	return u.Cmd.Run()
 }
 
 // Close does cleanup.

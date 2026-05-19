@@ -167,6 +167,18 @@ func (um *UbluManager) Ubluout(g *gocui.Gui, text string) {
 	termbox.Interrupt()
 }
 
+// Ubluerr writes error output from Ublu with visual distinction.
+func (um *UbluManager) Ubluerr(g *gocui.Gui, text string) {
+	v, err := g.View("Ubluout")
+	if err != nil {
+		// handle error
+	}
+	// Write stderr with color distinction if supported
+	fmt.Fprintf(v, "\033[31m%s\033[0m", text) // Red color for stderr
+	um.Hist.AppendAllOut(text)
+	termbox.Interrupt()
+}
+
 // Layout is the obligatory gocui layout redraw function
 func (um *UbluManager) Layout(g *gocui.Gui) error {
 	maxX, maxY := g.Size()

@@ -1,0 +1,51 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go workspace file
+go.work
+
+# Dependency directories (remove the comment below to include it)
+# vendor/
+
+# Build artifacts
+goublu
+/goublu
+
+# Backup files
+*~
+*.bak
+*.swp
+*.swo
+*~
+
+# IDE and editor files
+.vscode/
+.idea/
+*.iml
+.DS_Store
+
+# Temporary files
+/tmp/
+*.tmp
+
+# Log files
+*.log
+
+# OS-specific files
+Thumbs.db
+.DS_Store
+
+# Output files
+goublu.out.*
+
+# Made with Bob

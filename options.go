@@ -39,29 +39,6 @@ func NewOptions() (opts *Options) {
 	return opts
 }
 
-// // AllOpts returns a string of all options.
-// func (o *Options) AllOpts() (allopts string) {
-// 	m := make(map[string]string)
-// 	val := reflect.ValueOf(o).Elem()
-//
-// 	for i := 0; i < val.NumField(); i++ {
-//
-// 		valueField := val.Field(i)
-// 		typeField := val.Type().Field(i)
-//
-// 		f := valueField.Interface()
-// 		val := reflect.ValueOf(f)
-// 		m[typeField.Name] = val.String()
-// 	}
-//
-// 	for k, v := range m {
-// 		if k != "Macros" {
-// 			allopts += fmt.Sprintf("%s : %s\n", k, v)
-// 		}
-// 	}
-// 	return
-// }
-
 // AllOpts returns a string of all options.
 func (o *Options) AllOpts() (allopts string) {
 
